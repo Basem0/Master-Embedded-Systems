@@ -4,7 +4,7 @@
  * Made By Ahmed Basem Mohamed
  *
  *
- * ****************** EX 2 ***************
+ * ****************** EX 8 ***************
  */
 #include <stdio.h>
 
@@ -15,7 +15,7 @@ void main()
 	printf("Enter operator either + or - or * or divide: \n"); //to determine the operator
 	fflush(stdin); fflush(stdout);
 	scanf("%c",&operator);
-	printf("Enter tow operands: \n");
+	printf("Enter two operands: \n");
 	fflush(stdin); fflush(stdout);
 	scanf("%f %f",&num1,&num2);
 	if(operator=='+')
