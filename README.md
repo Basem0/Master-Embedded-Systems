@@ -1,7 +1,7 @@
 # Master-Embedded-Systems
 
 ## Contents
-### First Term image
+### First Term
 - [Unit 1: Diploma Prerequisites](https://github.com/Basem0/Master-Embedded-Systems) ![image](https://progress-bar.dev/100/?title=No_Assignments&color=bababa)
 - Unit 2: C Programming image
 - Unit 3: Embedded C image
