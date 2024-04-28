@@ -8,4 +8,4 @@
 - [Unit 4: System Architect]() ✖✖✖
 - [Unit 5: First Term Projects]() ✖✖✖
 ### Second Term 
-- [Unit 6]
+- [Unit 6]() ✖✖✖
