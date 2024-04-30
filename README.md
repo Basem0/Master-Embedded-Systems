@@ -9,5 +9,6 @@
 - [Unit 5: First Term Projects]() ✖✖✖
 ### Second Term 
 - [Unit 6]() ✖✖✖
+- [Unit 7]() ✖✖✖
 
 #### [Drive Link](https://drive.google.com/drive/folders/1GWskSVN4Az89VHR4Vtoy4MFsKqjWxi4G)
