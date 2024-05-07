@@ -6,7 +6,7 @@
 - [Unit 2: C Programming](https://github.com/Basem0/Master-Embedded-Systems/tree/main/Unit2) ✔✔✖
 - [Unit 3: Embedded C]() ✖✖✖ 
 - [Unit 4: System Architect]() ✖✖✖
-- [Unit 5: First Term Projects]() ✖✖✖
+- [Unit 5: First Term Projects]() ✖✖ ✖
 ### Second Term 
 - [Unit 6]() ✖✖✖
 - [Unit 7]() ✖✖✖
