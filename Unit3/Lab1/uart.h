@@ -1,6 +1,12 @@
-#ifndef _UART_H_
-#define _UART_H_
-void Uart_Send_string(unsigned char * P_tx_string);
+
+#ifndef UART_ARM
+
+#define UART_ARM
 
 
-#endif //_UART_H_
+void Uart_Send(unsigned char*message);
+
+
+
+
+#endif

@@ -1,12 +1,12 @@
-#include <uart.h>
+#include "uart.h"
 
-#define UART0DR *((volatile unsigned int * const)((unsigned int *)0x101f1000))
+#define UART_REG         *((volatile unsigned int*)((unsigned int*)0x101f1000))
 
-void Uart_Send_string(unsigned char * P_tx_string)
-{
-	while(*P_tx_string)
-	{
-		UART0DR = (unsigned int)(*P_tx_string);
-		P_tx_string++;
+
+void Uart_Send(unsigned char*message) {
+
+	while (*message!='\0') {
+		UART_REG = (unsigned int)(*message);
+		message++;
 	}
 }
