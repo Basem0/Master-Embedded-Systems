@@ -1,5 +1,7 @@
 # Master-Embedded-Systems
 
+In This Repository You Can Find All Tasks & Quiz Solutions & Projects & Drivers Learned From "Learn In Depth" Diploma
+Also You Can Find My Summeries & Progress In Diploma Here
 ## Contents
 ### First Term
 #### [Unit 1: Diploma Prerequisites](https://github.com/Basem0/Master-Embedded-Systems) (✔✔✔)
