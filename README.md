@@ -3,7 +3,8 @@
 ## Contents
 ### First Term
 #### [Unit 1: Diploma Prerequisites](https://github.com/Basem0/Master-Embedded-Systems) (✔✔✔)
-<p>In This Unit Just Know The Rules Of The Course And Setup All Tools We Will Need<p/>
+<p>In This Unit Just Know The Rules Of The Course And Setup All Tools We Will Need .</p>
+
 #### [Unit 2: C Programming](https://github.com/Basem0/Master-Embedded-Systems/tree/main/Unit2) (✔✔✔)
 <table>
   <tr>
@@ -32,6 +33,7 @@
     </td>
   </tr>
 </table>
+
 #### [Unit 3: Embedded C]() (✔✔✔)
 <table>
   <tr>
@@ -58,9 +60,8 @@
     </td>
   </tr>
 </table>
+
 #### [Unit 4: System Architect]() (✖✖✖)
-</table>
-#### [Unit 3: Embedded C]() (✔✔✔)
 <table>
   <tr>
     <td>
@@ -86,6 +87,7 @@
     </td>
   </tr>
 </table>
+
 #### [Unit 5: First Term Projects]() ✖✖✖
 ### Second Term 
 - [Unit 6]() ✖✖✖
