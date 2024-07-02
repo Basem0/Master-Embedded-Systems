@@ -98,6 +98,7 @@ Std_ReturnType keypad_get_value(const keypad_t *_keypad_obj, uint8 *value)
             
             /* Set the current row to HIGH */
             gpio_pin_write_logic(&(_keypad_obj->keypad_row_pins[l_rows_counter]), GPIO_HIGH);
+			_delay_ms(50);
             
             /* Check each column for a HIGH signal */
             for (l_columns_counter = ZERO_INIT; l_columns_counter < ECU_KEYPAD_COLUMNS; l_columns_counter++)
