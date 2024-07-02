@@ -73,12 +73,12 @@ typedef struct{
 /************************************************************************/
 
 /**
- * @brief Initialize the direction of a specific pin
+ * @brief init the direction of a specific pin
  * 
  * @param _pin_config Pointer to pin configuration structure
  * @return Std_ReturnType E_OK if successful, E_NOT_OK if error
  */
-Std_ReturnType gpio_pin_direction_intialize(const pin_config_t *_pin_config);
+Std_ReturnType gpio_pin_direction_init(const pin_config_t *_pin_config);
 
 /**
  * @brief Get the direction status of a specific pin
@@ -116,21 +116,21 @@ Std_ReturnType gpio_pin_read_logic(const pin_config_t *_pin_config, logic_t *log
 Std_ReturnType gpio_pin_toggle_logic(const pin_config_t *_pin_config);
 
 /**
- * @brief Initialize a specific pin (direction and logic level)
+ * @brief init a specific pin (direction and logic level)
  * 
  * @param _pin_config Pointer to pin configuration structure
  * @return Std_ReturnType E_OK if successful, E_NOT_OK if error
  */
-Std_ReturnType gpio_pin_intialize(const pin_config_t *_pin_config);
+Std_ReturnType gpio_pin_init(const pin_config_t *_pin_config);
 
 /**
- * @brief Initialize the direction of a specific port
+ * @brief init the direction of a specific port
  * 
  * @param port Port index
  * @param direction Direction value to be set for the port
  * @return Std_ReturnType E_OK if successful, E_NOT_OK if error
  */
-Std_ReturnType gpio_port_direction_intialize(port_index_t port, uint8 direction);
+Std_ReturnType gpio_port_direction_init(port_index_t port, uint8 direction);
 
 /**
  * @brief Get the direction status of a specific port

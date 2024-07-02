@@ -27,12 +27,12 @@ vuint8_t *port_registers[] = {PORTA, PORTB, PORTC, PORTD};
 /************************************************************************/
 
 /**
- * @brief Initialize the direction of a specific pin
+ * @brief init the direction of a specific pin
  * 
  * @param _pin_config Pointer to pin configuration structure
  * @return Std_ReturnType E_OK if successful, E_NOT_OK if error
  */
-Std_ReturnType gpio_pin_direction_intialize(const pin_config_t *_pin_config)
+Std_ReturnType gpio_pin_direction_init(const pin_config_t *_pin_config)
 {
     Std_ReturnType ret = E_OK;
     if (NULL == _pin_config || _pin_config->pin > PORT_PIN_MAX_NUMBER - 1)
@@ -150,12 +150,12 @@ Std_ReturnType gpio_pin_toggle_logic(const pin_config_t *_pin_config)
 }
 
 /**
- * @brief Initialize a specific pin (direction and logic level)
+ * @brief init a specific pin (direction and logic level)
  * 
  * @param _pin_config Pointer to pin configuration structure
  * @return Std_ReturnType E_OK if successful, E_NOT_OK if error
  */
-Std_ReturnType gpio_pin_intialize(const pin_config_t *_pin_config)
+Std_ReturnType gpio_pin_init(const pin_config_t *_pin_config)
 {
     Std_ReturnType ret = E_OK;
     if ((NULL == _pin_config) || (_pin_config->pin > (PORT_PIN_MAX_NUMBER - 1)))
@@ -164,20 +164,20 @@ Std_ReturnType gpio_pin_intialize(const pin_config_t *_pin_config)
     }
     else
     {
-        ret = gpio_pin_direction_intialize(_pin_config);
+        ret = gpio_pin_direction_init(_pin_config);
         ret = gpio_pin_write_logic(_pin_config, _pin_config->logic);
     }
     return ret;
 }
 
 /**
- * @brief Initialize the direction of a specific port
+ * @brief init the direction of a specific port
  * 
  * @param port Port index
  * @param direction Direction value to be set for the port
  * @return Std_ReturnType E_OK if successful, E_NOT_OK if error
  */
-Std_ReturnType gpio_port_direction_intialize(port_index_t port, uint8 direction)
+Std_ReturnType gpio_port_direction_init(port_index_t port, uint8 direction)
 {
     Std_ReturnType ret = E_OK;
     if (port > (PORT_MAX_NUMBER - 1))

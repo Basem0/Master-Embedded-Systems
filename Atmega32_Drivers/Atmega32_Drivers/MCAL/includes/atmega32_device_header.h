@@ -13,6 +13,7 @@
 /************************************************************************/
 #include "Utils.h"           /* Utility macros and functions */
 #include "Platform_Types.h"  /* Platform-specific type definitions */
+#include <util/delay.h>
 
 /************************************************************************/
 /*                        GPIO Registers Definitions                    */
