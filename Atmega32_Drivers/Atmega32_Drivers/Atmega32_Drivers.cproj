@@ -139,6 +139,9 @@
     <Compile Include="HAL\KEYPAD\keypad.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="HAL\KEYPAD\keypad_cfg.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="HAL\LCD\lcd.c">
       <SubType>compile</SubType>
     </Compile>

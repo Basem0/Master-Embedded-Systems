@@ -92,38 +92,21 @@ int main(void)
 
 	char message[11] = "HELLO LCD!";
 	lcd_4bit_send_string(&_lcd, message);
-
-	char input_buffer[5] = {0};  // Buffer to store numeric input from keypad
-	int buffer_index = 0;        // Index to track buffer position
 	char key;
 	
 	while (1)
 	{
 		/* Scan keypad for input */
 		keypad_get_value(&_keypad,&key);
-
-		if (key >= '0' && key <= '9')
+		if(key != 0)
 		{
-			/* Valid numeric key pressed, store in buffer and display on LCD */
-			input_buffer[buffer_index++] = key;
-			input_buffer[buffer_index] = '\0';  // Ensure null-terminated string
-
-			/* Display the number on LCD */
+			lcd_4bit_send_char_data(&_lcd,key);
 			lcd_4bit_send_command(&_lcd,_LCD_CLEAR);
-			lcd_4bit_set_cursor(&_lcd, 1, 1);  // Move cursor to the second line
-			lcd_4bit_send_string(&_lcd, input_buffer);
-
-			/* Reset buffer after displaying */
-			if (buffer_index >= 4)  // Assuming a maximum of 4 digits
-			{
-				buffer_index = 0;
-				for (int i = 0; i < 5; ++i)
-				input_buffer[i] = 0;
-			}
 		}
-
-		/* Delay to prevent multiple detections */
-		_delay_ms(100);
+		else
+		{
+			lcd_4bit_send_char_data(&_lcd,'d');
+		}
 	}
 	return 0;
 }

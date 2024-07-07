@@ -3,29 +3,29 @@ Atmega32_Drivers.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000620  00000000  00000000  00000074  2**1
+  0 .text         00000596  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000042  00800060  00000620  00000694  2**0
+  1 .data         0000004c  00800060  00000596  0000060a  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  000006d6  2**0
+  2 .comment      00000030  00000000  00000000  00000656  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000708  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000688  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000180  00000000  00000000  00000744  2**0
+  4 .debug_aranges 00000180  00000000  00000000  000006c4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00002739  00000000  00000000  000008c4  2**0
+  5 .debug_info   000026ad  00000000  00000000  00000844  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000c56  00000000  00000000  00002ffd  2**0
+  6 .debug_abbrev 00000bb7  00000000  00000000  00002ef1  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000100b  00000000  00000000  00003c53  2**0
+  7 .debug_line   00000ef3  00000000  00000000  00003aa8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  0000049c  00000000  00000000  00004c60  2**2
+  8 .debug_frame  000004a8  00000000  00000000  0000499c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    0000094b  00000000  00000000  000050fc  2**0
+  9 .debug_str    00000931  00000000  00000000  00004e44  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    0000268f  00000000  00000000  00005a47  2**0
+ 10 .debug_loc    00002678  00000000  00000000  00005775  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000170  00000000  00000000  000080d6  2**0
+ 11 .debug_ranges 00000140  00000000  00000000  00007ded  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -65,98 +65,90 @@ Disassembly of section .text:
   60:	10 e0       	ldi	r17, 0x00	; 0
   62:	a0 e6       	ldi	r26, 0x60	; 96
   64:	b0 e0       	ldi	r27, 0x00	; 0
-  66:	e0 e2       	ldi	r30, 0x20	; 32
-  68:	f6 e0       	ldi	r31, 0x06	; 6
+  66:	e6 e9       	ldi	r30, 0x96	; 150
+  68:	f5 e0       	ldi	r31, 0x05	; 5
   6a:	02 c0       	rjmp	.+4      	; 0x70 <__do_copy_data+0x10>
   6c:	05 90       	lpm	r0, Z+
   6e:	0d 92       	st	X+, r0
-  70:	a2 3a       	cpi	r26, 0xA2	; 162
+  70:	ac 3a       	cpi	r26, 0xAC	; 172
   72:	b1 07       	cpc	r27, r17
   74:	d9 f7       	brne	.-10     	; 0x6c <__do_copy_data+0xc>
-  76:	0e 94 d4 01 	call	0x3a8	; 0x3a8 <main>
-  7a:	0c 94 0e 03 	jmp	0x61c	; 0x61c <_exit>
+  76:	0e 94 cb 01 	call	0x396	; 0x396 <main>
+  7a:	0c 94 c9 02 	jmp	0x592	; 0x592 <_exit>
 
 0000007e <__bad_interrupt>:
   7e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000082 <keypad_init>:
- * 
- * @param _keypad_obj Pointer to the keypad object containing pin configurations.
- * @return Std_ReturnType Returns E_OK if initialization is successful, otherwise E_NOT_OK.
+ * @param _keypad_obj pointer to the keypad configurations
+ * @return Status of the function
+ *          (E_OK) : The function done successfully
+ *          (E_NOT_OK) : The function has issue to perform this action
  */
-Std_ReturnType keypad_init(const keypad_t *_keypad_obj)
-{
+Std_ReturnType keypad_init(const keypad_t *_keypad_obj){
   82:	0f 93       	push	r16
   84:	1f 93       	push	r17
   86:	cf 93       	push	r28
-    uint8 rows_counter = ZERO_INIT, columns_counter = ZERO_INIT;
     Std_ReturnType ret = E_OK;
-    
-    if (NULL == _keypad_obj)
+    uint8 rows_counter = ZERO_INIT, columns_counter = ZERO_INIT;
+    if(NULL == _keypad_obj){
   88:	00 97       	sbiw	r24, 0x00	; 0
   8a:	c9 f0       	breq	.+50     	; 0xbe <keypad_init+0x3c>
   8c:	8c 01       	movw	r16, r24
   8e:	c0 e0       	ldi	r28, 0x00	; 0
-  90:	06 c0       	rjmp	.+12     	; 0x9e <keypad_init+0x1c>
-    else
-    {
-        /* init row pins */
-        for (rows_counter = ZERO_INIT; rows_counter < ECU_KEYPAD_ROWS; rows_counter++)
-        {
-            gpio_pin_init(&(_keypad_obj->keypad_row_pins[rows_counter]));
-  92:	c8 01       	movw	r24, r16
-  94:	8c 0f       	add	r24, r28
-  96:	91 1d       	adc	r25, r1
-  98:	0e 94 fb 02 	call	0x5f6	; 0x5f6 <gpio_pin_init>
+  90:	81 e0       	ldi	r24, 0x01	; 1
+  92:	06 c0       	rjmp	.+12     	; 0xa0 <keypad_init+0x1e>
         ret = E_NOT_OK;
     }
-    else
-    {
-        /* init row pins */
-        for (rows_counter = ZERO_INIT; rows_counter < ECU_KEYPAD_ROWS; rows_counter++)
-  9c:	cf 5f       	subi	r28, 0xFF	; 255
-  9e:	c4 30       	cpi	r28, 0x04	; 4
-  a0:	c0 f3       	brcs	.-16     	; 0x92 <keypad_init+0x10>
-  a2:	c0 e0       	ldi	r28, 0x00	; 0
-  a4:	08 c0       	rjmp	.+16     	; 0xb6 <keypad_init+0x34>
-            gpio_pin_init(&(_keypad_obj->keypad_row_pins[rows_counter]));
-        }
-        /* init column pins */
-        for (columns_counter = ZERO_INIT; columns_counter < ECU_KEYPAD_COLUMNS; columns_counter++)
-        {
-            gpio_pin_init(&(_keypad_obj->keypad_column_pins[columns_counter]));
-  a6:	8c 2f       	mov	r24, r28
-  a8:	90 e0       	ldi	r25, 0x00	; 0
-  aa:	04 96       	adiw	r24, 0x04	; 4
-  ac:	80 0f       	add	r24, r16
-  ae:	91 1f       	adc	r25, r17
-  b0:	0e 94 fb 02 	call	0x5f6	; 0x5f6 <gpio_pin_init>
-        for (rows_counter = ZERO_INIT; rows_counter < ECU_KEYPAD_ROWS; rows_counter++)
-        {
-            gpio_pin_init(&(_keypad_obj->keypad_row_pins[rows_counter]));
-        }
-        /* init column pins */
-        for (columns_counter = ZERO_INIT; columns_counter < ECU_KEYPAD_COLUMNS; columns_counter++)
-  b4:	cf 5f       	subi	r28, 0xFF	; 255
-  b6:	c4 30       	cpi	r28, 0x04	; 4
-  b8:	b0 f3       	brcs	.-20     	; 0xa6 <keypad_init+0x24>
- * @return Std_ReturnType Returns E_OK if initialization is successful, otherwise E_NOT_OK.
- */
-Std_ReturnType keypad_init(const keypad_t *_keypad_obj)
-{
+    else{    
+        for(rows_counter=ZERO_INIT; rows_counter<ECU_KEYPAD_ROWS; rows_counter++){
+            ret = gpio_pin_init(&(_keypad_obj->keypad_row_pins[rows_counter]));
+  94:	c8 01       	movw	r24, r16
+  96:	8c 0f       	add	r24, r28
+  98:	91 1d       	adc	r25, r1
+  9a:	0e 94 b6 02 	call	0x56c	; 0x56c <gpio_pin_init>
     uint8 rows_counter = ZERO_INIT, columns_counter = ZERO_INIT;
-    Std_ReturnType ret = E_OK;
-  ba:	81 e0       	ldi	r24, 0x01	; 1
+    if(NULL == _keypad_obj){
+        ret = E_NOT_OK;
+    }
+    else{    
+        for(rows_counter=ZERO_INIT; rows_counter<ECU_KEYPAD_ROWS; rows_counter++){
+  9e:	cf 5f       	subi	r28, 0xFF	; 255
+  a0:	c4 30       	cpi	r28, 0x04	; 4
+  a2:	c0 f3       	brcs	.-16     	; 0x94 <keypad_init+0x12>
+  a4:	c0 e0       	ldi	r28, 0x00	; 0
+  a6:	08 c0       	rjmp	.+16     	; 0xb8 <keypad_init+0x36>
+            ret = gpio_pin_init(&(_keypad_obj->keypad_row_pins[rows_counter]));
+        }
+        for(columns_counter=ZERO_INIT; columns_counter<ECU_KEYPAD_COLUMNS; columns_counter++){
+            ret = gpio_pin_direction_init(&(_keypad_obj->keypad_column_pins[columns_counter]));
+  a8:	8c 2f       	mov	r24, r28
+  aa:	90 e0       	ldi	r25, 0x00	; 0
+  ac:	04 96       	adiw	r24, 0x04	; 4
+  ae:	80 0f       	add	r24, r16
+  b0:	91 1f       	adc	r25, r17
+  b2:	0e 94 07 02 	call	0x40e	; 0x40e <gpio_pin_direction_init>
+    }
+    else{    
+        for(rows_counter=ZERO_INIT; rows_counter<ECU_KEYPAD_ROWS; rows_counter++){
+            ret = gpio_pin_init(&(_keypad_obj->keypad_row_pins[rows_counter]));
+        }
+        for(columns_counter=ZERO_INIT; columns_counter<ECU_KEYPAD_COLUMNS; columns_counter++){
+  b6:	cf 5f       	subi	r28, 0xFF	; 255
+  b8:	c6 30       	cpi	r28, 0x06	; 6
+  ba:	b0 f3       	brcs	.-20     	; 0xa8 <keypad_init+0x26>
   bc:	01 c0       	rjmp	.+2      	; 0xc0 <keypad_init+0x3e>
-    
-    if (NULL == _keypad_obj)
-    {
+ */
+Std_ReturnType keypad_init(const keypad_t *_keypad_obj){
+    Std_ReturnType ret = E_OK;
+    uint8 rows_counter = ZERO_INIT, columns_counter = ZERO_INIT;
+    if(NULL == _keypad_obj){
         ret = E_NOT_OK;
   be:	80 e0       	ldi	r24, 0x00	; 0
-            gpio_pin_init(&(_keypad_obj->keypad_column_pins[columns_counter]));
+        for(columns_counter=ZERO_INIT; columns_counter<ECU_KEYPAD_COLUMNS; columns_counter++){
+            ret = gpio_pin_direction_init(&(_keypad_obj->keypad_column_pins[columns_counter]));
         }
     }
-    
     return ret;
 }
   c0:	cf 91       	pop	r28
@@ -165,876 +157,899 @@ Std_ReturnType keypad_init(const keypad_t *_keypad_obj)
   c6:	08 95       	ret
 
 000000c8 <keypad_get_value>:
- * @param _keypad_obj Pointer to the keypad object containing pin configurations.
- * @param value Pointer to a variable where the pressed key value will be stored.
- * @return Std_ReturnType Returns E_OK if a key press is detected, otherwise E_NOT_OK.
+ * @return Status of the function
+ *          (E_OK) : The function done successfully
+ *          (E_NOT_OK) : The function has issue to perform this action 
  */
 Std_ReturnType keypad_get_value(const keypad_t *_keypad_obj, uint8 *value)
 {
-  c8:	7f 92       	push	r7
-  ca:	8f 92       	push	r8
-  cc:	9f 92       	push	r9
-  ce:	af 92       	push	r10
-  d0:	bf 92       	push	r11
-  d2:	cf 92       	push	r12
-  d4:	df 92       	push	r13
-  d6:	ef 92       	push	r14
-  d8:	ff 92       	push	r15
-  da:	0f 93       	push	r16
-  dc:	1f 93       	push	r17
-  de:	cf 93       	push	r28
-  e0:	df 93       	push	r29
-  e2:	1f 92       	push	r1
-  e4:	cd b7       	in	r28, 0x3d	; 61
-  e6:	de b7       	in	r29, 0x3e	; 62
+  c8:	5f 92       	push	r5
+  ca:	6f 92       	push	r6
+  cc:	7f 92       	push	r7
+  ce:	8f 92       	push	r8
+  d0:	9f 92       	push	r9
+  d2:	af 92       	push	r10
+  d4:	bf 92       	push	r11
+  d6:	cf 92       	push	r12
+  d8:	df 92       	push	r13
+  da:	ef 92       	push	r14
+  dc:	ff 92       	push	r15
+  de:	0f 93       	push	r16
+  e0:	1f 93       	push	r17
+  e2:	cf 93       	push	r28
+  e4:	df 93       	push	r29
+  e6:	1f 92       	push	r1
+  e8:	cd b7       	in	r28, 0x3d	; 61
+  ea:	de b7       	in	r29, 0x3e	; 62
     Std_ReturnType ret = E_OK;
-    
-    if ((NULL == _keypad_obj) || (NULL == value))
-  e8:	00 97       	sbiw	r24, 0x00	; 0
-  ea:	09 f4       	brne	.+2      	; 0xee <keypad_get_value+0x26>
-  ec:	4b c0       	rjmp	.+150    	; 0x184 <keypad_get_value+0xbc>
-  ee:	61 15       	cp	r22, r1
-  f0:	71 05       	cpc	r23, r1
-  f2:	09 f4       	brne	.+2      	; 0xf6 <keypad_get_value+0x2e>
-  f4:	49 c0       	rjmp	.+146    	; 0x188 <keypad_get_value+0xc0>
-  f6:	5b 01       	movw	r10, r22
-  f8:	7c 01       	movw	r14, r24
+    uint8 l_rows_counter = ZERO_INIT, l_columns_counter = ZERO_INIT, l_counter = ZERO_INIT;
+    uint8 column_logic = ZERO_INIT;
+  ec:	19 82       	std	Y+1, r1	; 0x01
+    if((NULL == _keypad_obj) || (NULL == value)){
+  ee:	00 97       	sbiw	r24, 0x00	; 0
+  f0:	09 f4       	brne	.+2      	; 0xf4 <keypad_get_value+0x2c>
+  f2:	5e c0       	rjmp	.+188    	; 0x1b0 <keypad_get_value+0xe8>
+  f4:	61 15       	cp	r22, r1
+  f6:	71 05       	cpc	r23, r1
+  f8:	09 f4       	brne	.+2      	; 0xfc <keypad_get_value+0x34>
+  fa:	5c c0       	rjmp	.+184    	; 0x1b4 <keypad_get_value+0xec>
+  fc:	5b 01       	movw	r10, r22
+  fe:	7c 01       	movw	r14, r24
+ 100:	51 2c       	mov	r5, r1
+ 102:	66 24       	eor	r6, r6
+ 104:	63 94       	inc	r6
+ 106:	4f c0       	rjmp	.+158    	; 0x1a6 <keypad_get_value+0xde>
         ret = E_NOT_OK;
     }
-    else
-    {
-        uint8 l_rows_counter = ZERO_INIT, l_columns_counter = ZERO_INIT, l_counter = ZERO_INIT;
-        uint8 column_logic = ZERO_INIT;
-  fa:	19 82       	std	Y+1, r1	; 0x01
-        
-        for (l_rows_counter = ZERO_INIT; l_rows_counter < ECU_KEYPAD_ROWS; l_rows_counter++)
-  fc:	71 2c       	mov	r7, r1
- * @param value Pointer to a variable where the pressed key value will be stored.
- * @return Std_ReturnType Returns E_OK if a key press is detected, otherwise E_NOT_OK.
- */
-Std_ReturnType keypad_get_value(const keypad_t *_keypad_obj, uint8 *value)
-{
-    Std_ReturnType ret = E_OK;
-  fe:	01 e0       	ldi	r16, 0x01	; 1
-    else
-    {
-        uint8 l_rows_counter = ZERO_INIT, l_columns_counter = ZERO_INIT, l_counter = ZERO_INIT;
-        uint8 column_logic = ZERO_INIT;
-        
-        for (l_rows_counter = ZERO_INIT; l_rows_counter < ECU_KEYPAD_ROWS; l_rows_counter++)
- 100:	3d c0       	rjmp	.+122    	; 0x17c <keypad_get_value+0xb4>
-        {
-            /* Set all rows to LOW */
-            for (l_counter = ZERO_INIT; l_counter < ECU_KEYPAD_ROWS; l_counter++)
-            {
+    else{    
+        for(l_rows_counter=ZERO_INIT; l_rows_counter<ECU_KEYPAD_ROWS; l_rows_counter++){
+            for(l_counter=ZERO_INIT; l_counter<ECU_KEYPAD_ROWS; l_counter++){
                 ret = gpio_pin_write_logic(&(_keypad_obj->keypad_row_pins[l_counter]), GPIO_LOW);
- 102:	60 e0       	ldi	r22, 0x00	; 0
- 104:	c7 01       	movw	r24, r14
- 106:	81 0f       	add	r24, r17
- 108:	91 1d       	adc	r25, r1
- 10a:	0e 94 8d 02 	call	0x51a	; 0x51a <gpio_pin_write_logic>
- 10e:	08 2f       	mov	r16, r24
-        uint8 column_logic = ZERO_INIT;
-        
-        for (l_rows_counter = ZERO_INIT; l_rows_counter < ECU_KEYPAD_ROWS; l_rows_counter++)
-        {
-            /* Set all rows to LOW */
-            for (l_counter = ZERO_INIT; l_counter < ECU_KEYPAD_ROWS; l_counter++)
- 110:	1f 5f       	subi	r17, 0xFF	; 255
- 112:	01 c0       	rjmp	.+2      	; 0x116 <keypad_get_value+0x4e>
- 114:	10 e0       	ldi	r17, 0x00	; 0
- 116:	14 30       	cpi	r17, 0x04	; 4
- 118:	a0 f3       	brcs	.-24     	; 0x102 <keypad_get_value+0x3a>
-            {
+ 108:	60 e0       	ldi	r22, 0x00	; 0
+ 10a:	c7 01       	movw	r24, r14
+ 10c:	81 0f       	add	r24, r17
+ 10e:	91 1d       	adc	r25, r1
+ 110:	0e 94 48 02 	call	0x490	; 0x490 <gpio_pin_write_logic>
+ 114:	68 2e       	mov	r6, r24
+    if((NULL == _keypad_obj) || (NULL == value)){
+        ret = E_NOT_OK;
+    }
+    else{    
+        for(l_rows_counter=ZERO_INIT; l_rows_counter<ECU_KEYPAD_ROWS; l_rows_counter++){
+            for(l_counter=ZERO_INIT; l_counter<ECU_KEYPAD_ROWS; l_counter++){
+ 116:	1f 5f       	subi	r17, 0xFF	; 255
+ 118:	01 c0       	rjmp	.+2      	; 0x11c <keypad_get_value+0x54>
+ 11a:	10 e0       	ldi	r17, 0x00	; 0
+ 11c:	14 30       	cpi	r17, 0x04	; 4
+ 11e:	a0 f3       	brcs	.-24     	; 0x108 <keypad_get_value+0x40>
                 ret = gpio_pin_write_logic(&(_keypad_obj->keypad_row_pins[l_counter]), GPIO_LOW);
             }
-            
-            /* Set the current row to HIGH */
             gpio_pin_write_logic(&(_keypad_obj->keypad_row_pins[l_rows_counter]), GPIO_HIGH);
- 11a:	87 2c       	mov	r8, r7
- 11c:	91 2c       	mov	r9, r1
- 11e:	61 e0       	ldi	r22, 0x01	; 1
- 120:	c7 01       	movw	r24, r14
- 122:	88 0d       	add	r24, r8
- 124:	99 1d       	adc	r25, r9
- 126:	0e 94 8d 02 	call	0x51a	; 0x51a <gpio_pin_write_logic>
+ 120:	85 2c       	mov	r8, r5
+ 122:	91 2c       	mov	r9, r1
+ 124:	61 e0       	ldi	r22, 0x01	; 1
+ 126:	c7 01       	movw	r24, r14
+ 128:	88 0d       	add	r24, r8
+ 12a:	99 1d       	adc	r25, r9
+ 12c:	0e 94 48 02 	call	0x490	; 0x490 <gpio_pin_write_logic>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 12a:	83 ed       	ldi	r24, 0xD3	; 211
- 12c:	90 e3       	ldi	r25, 0x30	; 48
- 12e:	01 97       	sbiw	r24, 0x01	; 1
- 130:	f1 f7       	brne	.-4      	; 0x12e <keypad_get_value+0x66>
- 132:	00 c0       	rjmp	.+0      	; 0x134 <keypad_get_value+0x6c>
- 134:	00 00       	nop
-			_delay_ms(50);
-            
-            /* Check each column for a HIGH signal */
-            for (l_columns_counter = ZERO_INIT; l_columns_counter < ECU_KEYPAD_COLUMNS; l_columns_counter++)
- 136:	10 e0       	ldi	r17, 0x00	; 0
- 138:	1e c0       	rjmp	.+60     	; 0x176 <keypad_get_value+0xae>
-            {
+ 130:	83 ec       	ldi	r24, 0xC3	; 195
+ 132:	99 e0       	ldi	r25, 0x09	; 9
+ 134:	01 97       	sbiw	r24, 0x01	; 1
+ 136:	f1 f7       	brne	.-4      	; 0x134 <keypad_get_value+0x6c>
+ 138:	00 c0       	rjmp	.+0      	; 0x13a <keypad_get_value+0x72>
+ 13a:	00 00       	nop
+            _delay_ms(10);
+            for(l_columns_counter=ZERO_INIT; l_columns_counter<ECU_KEYPAD_COLUMNS; l_columns_counter++)
+ 13c:	71 2c       	mov	r7, r1
+ 13e:	2f c0       	rjmp	.+94     	; 0x19e <keypad_get_value+0xd6>
+			{
                 ret = gpio_pin_read_logic(&(_keypad_obj->keypad_column_pins[l_columns_counter]), &column_logic);
- 13a:	c1 2e       	mov	r12, r17
- 13c:	d1 2c       	mov	r13, r1
- 13e:	c6 01       	movw	r24, r12
- 140:	04 96       	adiw	r24, 0x04	; 4
- 142:	be 01       	movw	r22, r28
- 144:	6f 5f       	subi	r22, 0xFF	; 255
- 146:	7f 4f       	sbci	r23, 0xFF	; 255
- 148:	8e 0d       	add	r24, r14
- 14a:	9f 1d       	adc	r25, r15
- 14c:	0e 94 d6 02 	call	0x5ac	; 0x5ac <gpio_pin_read_logic>
- 150:	08 2f       	mov	r16, r24
-                
-                if (GPIO_HIGH == column_logic)
- 152:	89 81       	ldd	r24, Y+1	; 0x01
- 154:	81 30       	cpi	r24, 0x01	; 1
- 156:	71 f4       	brne	.+28     	; 0x174 <keypad_get_value+0xac>
-                {
+ 140:	c7 2c       	mov	r12, r7
+ 142:	d1 2c       	mov	r13, r1
+ 144:	86 01       	movw	r16, r12
+ 146:	0c 5f       	subi	r16, 0xFC	; 252
+ 148:	1f 4f       	sbci	r17, 0xFF	; 255
+ 14a:	0e 0d       	add	r16, r14
+ 14c:	1f 1d       	adc	r17, r15
+ 14e:	be 01       	movw	r22, r28
+ 150:	6f 5f       	subi	r22, 0xFF	; 255
+ 152:	7f 4f       	sbci	r23, 0xFF	; 255
+ 154:	c8 01       	movw	r24, r16
+ 156:	0e 94 91 02 	call	0x522	; 0x522 <gpio_pin_read_logic>
+ 15a:	68 2e       	mov	r6, r24
+                if(GPIO_HIGH == column_logic)
+ 15c:	89 81       	ldd	r24, Y+1	; 0x01
+ 15e:	81 30       	cpi	r24, 0x01	; 1
+ 160:	d9 f4       	brne	.+54     	; 0x198 <keypad_get_value+0xd0>
+ 162:	07 c0       	rjmp	.+14     	; 0x172 <keypad_get_value+0xaa>
+				{
+					while(GPIO_HIGH == column_logic)
+					{
+						ret = gpio_pin_read_logic(&(_keypad_obj->keypad_column_pins[l_columns_counter]), &column_logic);
+ 164:	be 01       	movw	r22, r28
+ 166:	6f 5f       	subi	r22, 0xFF	; 255
+ 168:	7f 4f       	sbci	r23, 0xFF	; 255
+ 16a:	c8 01       	movw	r24, r16
+ 16c:	0e 94 91 02 	call	0x522	; 0x522 <gpio_pin_read_logic>
+ 170:	68 2e       	mov	r6, r24
+            for(l_columns_counter=ZERO_INIT; l_columns_counter<ECU_KEYPAD_COLUMNS; l_columns_counter++)
+			{
+                ret = gpio_pin_read_logic(&(_keypad_obj->keypad_column_pins[l_columns_counter]), &column_logic);
+                if(GPIO_HIGH == column_logic)
+				{
+					while(GPIO_HIGH == column_logic)
+ 172:	89 81       	ldd	r24, Y+1	; 0x01
+ 174:	81 30       	cpi	r24, 0x01	; 1
+ 176:	b1 f3       	breq	.-20     	; 0x164 <keypad_get_value+0x9c>
+					{
+						ret = gpio_pin_read_logic(&(_keypad_obj->keypad_column_pins[l_columns_counter]), &column_logic);
+					}
                     *value = btn_values[l_rows_counter][l_columns_counter];
- 158:	c4 01       	movw	r24, r8
- 15a:	88 0f       	add	r24, r24
- 15c:	99 1f       	adc	r25, r25
- 15e:	88 0f       	add	r24, r24
- 160:	99 1f       	adc	r25, r25
- 162:	8a 57       	subi	r24, 0x7A	; 122
- 164:	9f 4f       	sbci	r25, 0xFF	; 255
- 166:	fc 01       	movw	r30, r24
- 168:	ec 0d       	add	r30, r12
- 16a:	fd 1d       	adc	r31, r13
- 16c:	80 81       	ld	r24, Z
- 16e:	f5 01       	movw	r30, r10
- 170:	80 83       	st	Z, r24
- 172:	0b c0       	rjmp	.+22     	; 0x18a <keypad_get_value+0xc2>
-            /* Set the current row to HIGH */
+ 178:	c4 01       	movw	r24, r8
+ 17a:	88 0f       	add	r24, r24
+ 17c:	99 1f       	adc	r25, r25
+ 17e:	88 0d       	add	r24, r8
+ 180:	99 1d       	adc	r25, r9
+ 182:	88 0f       	add	r24, r24
+ 184:	99 1f       	adc	r25, r25
+ 186:	88 57       	subi	r24, 0x78	; 120
+ 188:	9f 4f       	sbci	r25, 0xFF	; 255
+ 18a:	fc 01       	movw	r30, r24
+ 18c:	ec 0d       	add	r30, r12
+ 18e:	fd 1d       	adc	r31, r13
+ 190:	80 81       	ld	r24, Z
+ 192:	f5 01       	movw	r30, r10
+ 194:	80 83       	st	Z, r24
+				    return ret;
+ 196:	0f c0       	rjmp	.+30     	; 0x1b6 <keypad_get_value+0xee>
+                }
+				else
+				{
+					*value = 0;
+ 198:	f5 01       	movw	r30, r10
+ 19a:	10 82       	st	Z, r1
+            for(l_counter=ZERO_INIT; l_counter<ECU_KEYPAD_ROWS; l_counter++){
+                ret = gpio_pin_write_logic(&(_keypad_obj->keypad_row_pins[l_counter]), GPIO_LOW);
+            }
             gpio_pin_write_logic(&(_keypad_obj->keypad_row_pins[l_rows_counter]), GPIO_HIGH);
-			_delay_ms(50);
-            
-            /* Check each column for a HIGH signal */
-            for (l_columns_counter = ZERO_INIT; l_columns_counter < ECU_KEYPAD_COLUMNS; l_columns_counter++)
- 174:	1f 5f       	subi	r17, 0xFF	; 255
- 176:	14 30       	cpi	r17, 0x04	; 4
- 178:	00 f3       	brcs	.-64     	; 0x13a <keypad_get_value+0x72>
-    else
-    {
-        uint8 l_rows_counter = ZERO_INIT, l_columns_counter = ZERO_INIT, l_counter = ZERO_INIT;
-        uint8 column_logic = ZERO_INIT;
-        
-        for (l_rows_counter = ZERO_INIT; l_rows_counter < ECU_KEYPAD_ROWS; l_rows_counter++)
- 17a:	73 94       	inc	r7
- 17c:	f3 e0       	ldi	r31, 0x03	; 3
- 17e:	f7 15       	cp	r31, r7
- 180:	48 f6       	brcc	.-110    	; 0x114 <keypad_get_value+0x4c>
- 182:	03 c0       	rjmp	.+6      	; 0x18a <keypad_get_value+0xc2>
+            _delay_ms(10);
+            for(l_columns_counter=ZERO_INIT; l_columns_counter<ECU_KEYPAD_COLUMNS; l_columns_counter++)
+ 19c:	73 94       	inc	r7
+ 19e:	f5 e0       	ldi	r31, 0x05	; 5
+ 1a0:	f7 15       	cp	r31, r7
+ 1a2:	70 f6       	brcc	.-100    	; 0x140 <keypad_get_value+0x78>
+    uint8 column_logic = ZERO_INIT;
+    if((NULL == _keypad_obj) || (NULL == value)){
+        ret = E_NOT_OK;
+    }
+    else{    
+        for(l_rows_counter=ZERO_INIT; l_rows_counter<ECU_KEYPAD_ROWS; l_rows_counter++){
+ 1a4:	53 94       	inc	r5
+ 1a6:	83 e0       	ldi	r24, 0x03	; 3
+ 1a8:	85 15       	cp	r24, r5
+ 1aa:	08 f0       	brcs	.+2      	; 0x1ae <keypad_get_value+0xe6>
+ 1ac:	b6 cf       	rjmp	.-148    	; 0x11a <keypad_get_value+0x52>
+ 1ae:	03 c0       	rjmp	.+6      	; 0x1b6 <keypad_get_value+0xee>
 {
     Std_ReturnType ret = E_OK;
-    
-    if ((NULL == _keypad_obj) || (NULL == value))
-    {
+    uint8 l_rows_counter = ZERO_INIT, l_columns_counter = ZERO_INIT, l_counter = ZERO_INIT;
+    uint8 column_logic = ZERO_INIT;
+    if((NULL == _keypad_obj) || (NULL == value)){
         ret = E_NOT_OK;
- 184:	00 e0       	ldi	r16, 0x00	; 0
- 186:	01 c0       	rjmp	.+2      	; 0x18a <keypad_get_value+0xc2>
- 188:	00 e0       	ldi	r16, 0x00	; 0
-            }
+ 1b0:	61 2c       	mov	r6, r1
+ 1b2:	01 c0       	rjmp	.+2      	; 0x1b6 <keypad_get_value+0xee>
+ 1b4:	61 2c       	mov	r6, r1
+				}
+			}
         }
     }
-    
     return ret;
-}
- 18a:	80 2f       	mov	r24, r16
- 18c:	0f 90       	pop	r0
- 18e:	df 91       	pop	r29
- 190:	cf 91       	pop	r28
- 192:	1f 91       	pop	r17
- 194:	0f 91       	pop	r16
- 196:	ff 90       	pop	r15
- 198:	ef 90       	pop	r14
- 19a:	df 90       	pop	r13
- 19c:	cf 90       	pop	r12
- 19e:	bf 90       	pop	r11
- 1a0:	af 90       	pop	r10
- 1a2:	9f 90       	pop	r9
- 1a4:	8f 90       	pop	r8
- 1a6:	7f 90       	pop	r7
- 1a8:	08 95       	ret
+ 1b6:	86 2d       	mov	r24, r6
+ 1b8:	0f 90       	pop	r0
+ 1ba:	df 91       	pop	r29
+ 1bc:	cf 91       	pop	r28
+ 1be:	1f 91       	pop	r17
+ 1c0:	0f 91       	pop	r16
+ 1c2:	ff 90       	pop	r15
+ 1c4:	ef 90       	pop	r14
+ 1c6:	df 90       	pop	r13
+ 1c8:	cf 90       	pop	r12
+ 1ca:	bf 90       	pop	r11
+ 1cc:	af 90       	pop	r10
+ 1ce:	9f 90       	pop	r9
+ 1d0:	8f 90       	pop	r8
+ 1d2:	7f 90       	pop	r7
+ 1d4:	6f 90       	pop	r6
+ 1d6:	5f 90       	pop	r5
+ 1d8:	08 95       	ret
 
-000001aa <lcd_send_4bits>:
-    else{    
-        ret = lcd_8bit_set_cursor(lcd, row, column);
-        ret = lcd_8bit_send_string(lcd, str);
-    }
-    return ret;
-}
- 1aa:	0f 93       	push	r16
- 1ac:	1f 93       	push	r17
- 1ae:	cf 93       	push	r28
- 1b0:	8c 01       	movw	r16, r24
- 1b2:	c6 2f       	mov	r28, r22
- 1b4:	61 70       	andi	r22, 0x01	; 1
- 1b6:	02 96       	adiw	r24, 0x02	; 2
- 1b8:	0e 94 8d 02 	call	0x51a	; 0x51a <gpio_pin_write_logic>
- 1bc:	c1 fb       	bst	r28, 1
- 1be:	66 27       	eor	r22, r22
- 1c0:	60 f9       	bld	r22, 0
- 1c2:	c8 01       	movw	r24, r16
- 1c4:	03 96       	adiw	r24, 0x03	; 3
- 1c6:	0e 94 8d 02 	call	0x51a	; 0x51a <gpio_pin_write_logic>
- 1ca:	c2 fb       	bst	r28, 2
- 1cc:	66 27       	eor	r22, r22
- 1ce:	60 f9       	bld	r22, 0
- 1d0:	c8 01       	movw	r24, r16
- 1d2:	04 96       	adiw	r24, 0x04	; 4
- 1d4:	0e 94 8d 02 	call	0x51a	; 0x51a <gpio_pin_write_logic>
- 1d8:	c3 fb       	bst	r28, 3
- 1da:	66 27       	eor	r22, r22
- 1dc:	60 f9       	bld	r22, 0
- 1de:	c8 01       	movw	r24, r16
- 1e0:	05 96       	adiw	r24, 0x05	; 5
- 1e2:	0e 94 8d 02 	call	0x51a	; 0x51a <gpio_pin_write_logic>
- 1e6:	cf 91       	pop	r28
- 1e8:	1f 91       	pop	r17
- 1ea:	0f 91       	pop	r16
- 1ec:	08 95       	ret
-
-000001ee <lcd_4bit_send_enable_signal>:
- 1ee:	cf 93       	push	r28
- 1f0:	df 93       	push	r29
- 1f2:	ec 01       	movw	r28, r24
- 1f4:	21 96       	adiw	r28, 0x01	; 1
- 1f6:	61 e0       	ldi	r22, 0x01	; 1
- 1f8:	ce 01       	movw	r24, r28
- 1fa:	0e 94 8d 02 	call	0x51a	; 0x51a <gpio_pin_write_logic>
- 1fe:	00 c0       	rjmp	.+0      	; 0x200 <lcd_4bit_send_enable_signal+0x12>
- 200:	00 c0       	rjmp	.+0      	; 0x202 <lcd_4bit_send_enable_signal+0x14>
- 202:	00 00       	nop
- 204:	60 e0       	ldi	r22, 0x00	; 0
- 206:	ce 01       	movw	r24, r28
- 208:	0e 94 8d 02 	call	0x51a	; 0x51a <gpio_pin_write_logic>
- 20c:	df 91       	pop	r29
- 20e:	cf 91       	pop	r28
- 210:	08 95       	ret
-
-00000212 <lcd_4bit_send_command>:
- 212:	1f 93       	push	r17
- 214:	cf 93       	push	r28
- 216:	df 93       	push	r29
- 218:	00 97       	sbiw	r24, 0x00	; 0
- 21a:	b1 f0       	breq	.+44     	; 0x248 <lcd_4bit_send_command+0x36>
- 21c:	16 2f       	mov	r17, r22
- 21e:	ec 01       	movw	r28, r24
- 220:	60 e0       	ldi	r22, 0x00	; 0
- 222:	0e 94 8d 02 	call	0x51a	; 0x51a <gpio_pin_write_logic>
- 226:	61 2f       	mov	r22, r17
- 228:	62 95       	swap	r22
- 22a:	6f 70       	andi	r22, 0x0F	; 15
- 22c:	ce 01       	movw	r24, r28
- 22e:	0e 94 d5 00 	call	0x1aa	; 0x1aa <lcd_send_4bits>
- 232:	ce 01       	movw	r24, r28
- 234:	0e 94 f7 00 	call	0x1ee	; 0x1ee <lcd_4bit_send_enable_signal>
- 238:	61 2f       	mov	r22, r17
- 23a:	ce 01       	movw	r24, r28
- 23c:	0e 94 d5 00 	call	0x1aa	; 0x1aa <lcd_send_4bits>
- 240:	ce 01       	movw	r24, r28
- 242:	0e 94 f7 00 	call	0x1ee	; 0x1ee <lcd_4bit_send_enable_signal>
- 246:	01 c0       	rjmp	.+2      	; 0x24a <lcd_4bit_send_command+0x38>
- 248:	80 e0       	ldi	r24, 0x00	; 0
- 24a:	df 91       	pop	r29
- 24c:	cf 91       	pop	r28
- 24e:	1f 91       	pop	r17
- 250:	08 95       	ret
-
-00000252 <lcd_4bit_init>:
- 252:	1f 93       	push	r17
- 254:	cf 93       	push	r28
- 256:	df 93       	push	r29
- 258:	00 97       	sbiw	r24, 0x00	; 0
- 25a:	09 f4       	brne	.+2      	; 0x25e <lcd_4bit_init+0xc>
- 25c:	47 c0       	rjmp	.+142    	; 0x2ec <lcd_4bit_init+0x9a>
- 25e:	ec 01       	movw	r28, r24
- 260:	0e 94 fb 02 	call	0x5f6	; 0x5f6 <gpio_pin_init>
- 264:	ce 01       	movw	r24, r28
- 266:	01 96       	adiw	r24, 0x01	; 1
- 268:	0e 94 fb 02 	call	0x5f6	; 0x5f6 <gpio_pin_init>
- 26c:	10 e0       	ldi	r17, 0x00	; 0
- 26e:	08 c0       	rjmp	.+16     	; 0x280 <lcd_4bit_init+0x2e>
- 270:	81 2f       	mov	r24, r17
- 272:	90 e0       	ldi	r25, 0x00	; 0
- 274:	02 96       	adiw	r24, 0x02	; 2
- 276:	8c 0f       	add	r24, r28
- 278:	9d 1f       	adc	r25, r29
- 27a:	0e 94 fb 02 	call	0x5f6	; 0x5f6 <gpio_pin_init>
- 27e:	1f 5f       	subi	r17, 0xFF	; 255
- 280:	14 30       	cpi	r17, 0x04	; 4
- 282:	b0 f3       	brcs	.-20     	; 0x270 <lcd_4bit_init+0x1e>
- 284:	87 e8       	ldi	r24, 0x87	; 135
- 286:	93 e1       	ldi	r25, 0x13	; 19
- 288:	01 97       	sbiw	r24, 0x01	; 1
- 28a:	f1 f7       	brne	.-4      	; 0x288 <lcd_4bit_init+0x36>
- 28c:	00 c0       	rjmp	.+0      	; 0x28e <lcd_4bit_init+0x3c>
- 28e:	00 00       	nop
- 290:	68 e3       	ldi	r22, 0x38	; 56
- 292:	ce 01       	movw	r24, r28
- 294:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
- 298:	81 ee       	ldi	r24, 0xE1	; 225
- 29a:	94 e0       	ldi	r25, 0x04	; 4
- 29c:	01 97       	sbiw	r24, 0x01	; 1
- 29e:	f1 f7       	brne	.-4      	; 0x29c <lcd_4bit_init+0x4a>
- 2a0:	00 c0       	rjmp	.+0      	; 0x2a2 <lcd_4bit_init+0x50>
- 2a2:	00 00       	nop
- 2a4:	68 e3       	ldi	r22, 0x38	; 56
- 2a6:	ce 01       	movw	r24, r28
- 2a8:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
- 2ac:	92 e3       	ldi	r25, 0x32	; 50
- 2ae:	9a 95       	dec	r25
- 2b0:	f1 f7       	brne	.-4      	; 0x2ae <lcd_4bit_init+0x5c>
- 2b2:	68 e3       	ldi	r22, 0x38	; 56
- 2b4:	ce 01       	movw	r24, r28
- 2b6:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
- 2ba:	61 e0       	ldi	r22, 0x01	; 1
- 2bc:	ce 01       	movw	r24, r28
- 2be:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
- 2c2:	62 e0       	ldi	r22, 0x02	; 2
- 2c4:	ce 01       	movw	r24, r28
- 2c6:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
- 2ca:	66 e0       	ldi	r22, 0x06	; 6
- 2cc:	ce 01       	movw	r24, r28
- 2ce:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
- 2d2:	6c e0       	ldi	r22, 0x0C	; 12
- 2d4:	ce 01       	movw	r24, r28
- 2d6:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
- 2da:	68 e2       	ldi	r22, 0x28	; 40
- 2dc:	ce 01       	movw	r24, r28
- 2de:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
- 2e2:	60 e8       	ldi	r22, 0x80	; 128
- 2e4:	ce 01       	movw	r24, r28
- 2e6:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
- 2ea:	01 c0       	rjmp	.+2      	; 0x2ee <lcd_4bit_init+0x9c>
- 2ec:	80 e0       	ldi	r24, 0x00	; 0
- 2ee:	df 91       	pop	r29
- 2f0:	cf 91       	pop	r28
- 2f2:	1f 91       	pop	r17
- 2f4:	08 95       	ret
-
-000002f6 <lcd_4bit_send_char_data>:
- 2f6:	1f 93       	push	r17
- 2f8:	cf 93       	push	r28
- 2fa:	df 93       	push	r29
- 2fc:	00 97       	sbiw	r24, 0x00	; 0
- 2fe:	b1 f0       	breq	.+44     	; 0x32c <lcd_4bit_send_char_data+0x36>
- 300:	16 2f       	mov	r17, r22
- 302:	ec 01       	movw	r28, r24
- 304:	61 e0       	ldi	r22, 0x01	; 1
- 306:	0e 94 8d 02 	call	0x51a	; 0x51a <gpio_pin_write_logic>
- 30a:	61 2f       	mov	r22, r17
- 30c:	62 95       	swap	r22
- 30e:	6f 70       	andi	r22, 0x0F	; 15
- 310:	ce 01       	movw	r24, r28
- 312:	0e 94 d5 00 	call	0x1aa	; 0x1aa <lcd_send_4bits>
- 316:	ce 01       	movw	r24, r28
- 318:	0e 94 f7 00 	call	0x1ee	; 0x1ee <lcd_4bit_send_enable_signal>
- 31c:	61 2f       	mov	r22, r17
- 31e:	ce 01       	movw	r24, r28
- 320:	0e 94 d5 00 	call	0x1aa	; 0x1aa <lcd_send_4bits>
- 324:	ce 01       	movw	r24, r28
- 326:	0e 94 f7 00 	call	0x1ee	; 0x1ee <lcd_4bit_send_enable_signal>
- 32a:	01 c0       	rjmp	.+2      	; 0x32e <lcd_4bit_send_char_data+0x38>
- 32c:	80 e0       	ldi	r24, 0x00	; 0
- 32e:	df 91       	pop	r29
- 330:	cf 91       	pop	r28
- 332:	1f 91       	pop	r17
- 334:	08 95       	ret
-
-00000336 <lcd_4bit_send_string>:
- 336:	0f 93       	push	r16
- 338:	1f 93       	push	r17
- 33a:	cf 93       	push	r28
- 33c:	df 93       	push	r29
- 33e:	8c 01       	movw	r16, r24
- 340:	eb 01       	movw	r28, r22
- 342:	89 2b       	or	r24, r25
- 344:	51 f0       	breq	.+20     	; 0x35a <lcd_4bit_send_string+0x24>
- 346:	81 e0       	ldi	r24, 0x01	; 1
- 348:	04 c0       	rjmp	.+8      	; 0x352 <lcd_4bit_send_string+0x1c>
- 34a:	21 96       	adiw	r28, 0x01	; 1
- 34c:	c8 01       	movw	r24, r16
- 34e:	0e 94 7b 01 	call	0x2f6	; 0x2f6 <lcd_4bit_send_char_data>
- 352:	68 81       	ld	r22, Y
- 354:	61 11       	cpse	r22, r1
- 356:	f9 cf       	rjmp	.-14     	; 0x34a <lcd_4bit_send_string+0x14>
- 358:	01 c0       	rjmp	.+2      	; 0x35c <lcd_4bit_send_string+0x26>
- 35a:	80 e0       	ldi	r24, 0x00	; 0
- 35c:	df 91       	pop	r29
- 35e:	cf 91       	pop	r28
- 360:	1f 91       	pop	r17
- 362:	0f 91       	pop	r16
- 364:	08 95       	ret
-
-00000366 <lcd_4bit_set_cursor>:
- *          (E_NOT_OK) : The function has issue to perform this action
- */
-Std_ReturnType lcd_4bit_set_cursor(const chr_lcd_4bit_t *lcd, uint8 row, uint8 coulmn){
+000001da <lcd_send_4bits>:
     Std_ReturnType ret = E_OK;
-    coulmn--;
-    switch(row){
- 366:	62 30       	cpi	r22, 0x02	; 2
- 368:	71 f0       	breq	.+28     	; 0x386 <lcd_4bit_set_cursor+0x20>
- 36a:	18 f4       	brcc	.+6      	; 0x372 <lcd_4bit_set_cursor+0xc>
- 36c:	61 30       	cpi	r22, 0x01	; 1
- 36e:	31 f0       	breq	.+12     	; 0x37c <lcd_4bit_set_cursor+0x16>
- 370:	19 c0       	rjmp	.+50     	; 0x3a4 <lcd_4bit_set_cursor+0x3e>
- 372:	63 30       	cpi	r22, 0x03	; 3
- 374:	69 f0       	breq	.+26     	; 0x390 <lcd_4bit_set_cursor+0x2a>
- 376:	64 30       	cpi	r22, 0x04	; 4
- 378:	81 f0       	breq	.+32     	; 0x39a <lcd_4bit_set_cursor+0x34>
- 37a:	14 c0       	rjmp	.+40     	; 0x3a4 <lcd_4bit_set_cursor+0x3e>
-        case ROW1 : ret = lcd_4bit_send_command(lcd, (0x80 + coulmn)); break;
- 37c:	6f e7       	ldi	r22, 0x7F	; 127
- 37e:	64 0f       	add	r22, r20
- 380:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
- 384:	08 95       	ret
-        case ROW2 : ret = lcd_4bit_send_command(lcd, (0xc0 + coulmn)); break;
- 386:	6f eb       	ldi	r22, 0xBF	; 191
- 388:	64 0f       	add	r22, r20
- 38a:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
- 38e:	08 95       	ret
-        case ROW3 : ret = lcd_4bit_send_command(lcd, (0x94 + coulmn)); break;
- 390:	63 e9       	ldi	r22, 0x93	; 147
- 392:	64 0f       	add	r22, r20
- 394:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
- 398:	08 95       	ret
-        case ROW4 : ret = lcd_4bit_send_command(lcd, (0xd4 + coulmn)); break;
- 39a:	63 ed       	ldi	r22, 0xD3	; 211
- 39c:	64 0f       	add	r22, r20
- 39e:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
- 3a2:	08 95       	ret
+    ret = gpio_pin_write_logic(&(lcd->lcd_en), GPIO_HIGH);
+    _delay_us(5);
+    ret = gpio_pin_write_logic(&(lcd->lcd_en), GPIO_LOW);
+    return ret;
+}
+ 1da:	0f 93       	push	r16
+ 1dc:	1f 93       	push	r17
+ 1de:	cf 93       	push	r28
+ 1e0:	8c 01       	movw	r16, r24
+ 1e2:	c6 2f       	mov	r28, r22
+ 1e4:	61 70       	andi	r22, 0x01	; 1
+ 1e6:	02 96       	adiw	r24, 0x02	; 2
+ 1e8:	0e 94 48 02 	call	0x490	; 0x490 <gpio_pin_write_logic>
+ 1ec:	c1 fb       	bst	r28, 1
+ 1ee:	66 27       	eor	r22, r22
+ 1f0:	60 f9       	bld	r22, 0
+ 1f2:	c8 01       	movw	r24, r16
+ 1f4:	03 96       	adiw	r24, 0x03	; 3
+ 1f6:	0e 94 48 02 	call	0x490	; 0x490 <gpio_pin_write_logic>
+ 1fa:	c2 fb       	bst	r28, 2
+ 1fc:	66 27       	eor	r22, r22
+ 1fe:	60 f9       	bld	r22, 0
+ 200:	c8 01       	movw	r24, r16
+ 202:	04 96       	adiw	r24, 0x04	; 4
+ 204:	0e 94 48 02 	call	0x490	; 0x490 <gpio_pin_write_logic>
+ 208:	c3 fb       	bst	r28, 3
+ 20a:	66 27       	eor	r22, r22
+ 20c:	60 f9       	bld	r22, 0
+ 20e:	c8 01       	movw	r24, r16
+ 210:	05 96       	adiw	r24, 0x05	; 5
+ 212:	0e 94 48 02 	call	0x490	; 0x490 <gpio_pin_write_logic>
+ 216:	cf 91       	pop	r28
+ 218:	1f 91       	pop	r17
+ 21a:	0f 91       	pop	r16
+ 21c:	08 95       	ret
+
+0000021e <lcd_4bit_send_enable_signal>:
+ 21e:	cf 93       	push	r28
+ 220:	df 93       	push	r29
+ 222:	ec 01       	movw	r28, r24
+ 224:	21 96       	adiw	r28, 0x01	; 1
+ 226:	61 e0       	ldi	r22, 0x01	; 1
+ 228:	ce 01       	movw	r24, r28
+ 22a:	0e 94 48 02 	call	0x490	; 0x490 <gpio_pin_write_logic>
+ 22e:	00 c0       	rjmp	.+0      	; 0x230 <lcd_4bit_send_enable_signal+0x12>
+ 230:	00 c0       	rjmp	.+0      	; 0x232 <lcd_4bit_send_enable_signal+0x14>
+ 232:	00 00       	nop
+ 234:	60 e0       	ldi	r22, 0x00	; 0
+ 236:	ce 01       	movw	r24, r28
+ 238:	0e 94 48 02 	call	0x490	; 0x490 <gpio_pin_write_logic>
+ 23c:	df 91       	pop	r29
+ 23e:	cf 91       	pop	r28
+ 240:	08 95       	ret
+
+00000242 <lcd_4bit_send_command>:
+ * @param command
  * @return Status of the function
  *          (E_OK) : The function done successfully
  *          (E_NOT_OK) : The function has issue to perform this action
  */
-Std_ReturnType lcd_4bit_set_cursor(const chr_lcd_4bit_t *lcd, uint8 row, uint8 coulmn){
+Std_ReturnType lcd_4bit_send_command(const chr_lcd_4bit_t *lcd, uint8 command){
+ 242:	1f 93       	push	r17
+ 244:	cf 93       	push	r28
+ 246:	df 93       	push	r29
     Std_ReturnType ret = E_OK;
- 3a4:	81 e0       	ldi	r24, 0x01	; 1
-        case ROW3 : ret = lcd_4bit_send_command(lcd, (0x94 + coulmn)); break;
-        case ROW4 : ret = lcd_4bit_send_command(lcd, (0xd4 + coulmn)); break;
-        default : ;
+    if(NULL == lcd){
+ 248:	00 97       	sbiw	r24, 0x00	; 0
+ 24a:	b1 f0       	breq	.+44     	; 0x278 <lcd_4bit_send_command+0x36>
+ 24c:	16 2f       	mov	r17, r22
+ 24e:	ec 01       	movw	r28, r24
+        ret = E_NOT_OK;
+    }
+    else{
+        /* R/W Pin connected to the GND -> Logic (0) "Hard Wired" */
+        /* Write Logic (0) to the "Register Select" Pin to select the "Instruction Register"  */
+        ret = gpio_pin_write_logic(&(lcd->lcd_rs), GPIO_LOW);
+ 250:	60 e0       	ldi	r22, 0x00	; 0
+ 252:	0e 94 48 02 	call	0x490	; 0x490 <gpio_pin_write_logic>
+        /* Send the Command through the (4-Pins" Data lines */
+        ret = lcd_send_4bits(lcd, command >> 4);
+ 256:	61 2f       	mov	r22, r17
+ 258:	62 95       	swap	r22
+ 25a:	6f 70       	andi	r22, 0x0F	; 15
+ 25c:	ce 01       	movw	r24, r28
+ 25e:	0e 94 ed 00 	call	0x1da	; 0x1da <lcd_send_4bits>
+        /* Send the Enable Signal on the "E" Pin */
+        ret = lcd_4bit_send_enable_signal(lcd);
+ 262:	ce 01       	movw	r24, r28
+ 264:	0e 94 0f 01 	call	0x21e	; 0x21e <lcd_4bit_send_enable_signal>
+        /* Send the Command through the (4-Pins" Data lines */
+        ret = lcd_send_4bits(lcd, command);
+ 268:	61 2f       	mov	r22, r17
+ 26a:	ce 01       	movw	r24, r28
+ 26c:	0e 94 ed 00 	call	0x1da	; 0x1da <lcd_send_4bits>
+        /* Send the Enable Signal on the "E" Pin */
+        ret = lcd_4bit_send_enable_signal(lcd);
+ 270:	ce 01       	movw	r24, r28
+ 272:	0e 94 0f 01 	call	0x21e	; 0x21e <lcd_4bit_send_enable_signal>
+ 276:	01 c0       	rjmp	.+2      	; 0x27a <lcd_4bit_send_command+0x38>
+ *          (E_NOT_OK) : The function has issue to perform this action
+ */
+Std_ReturnType lcd_4bit_send_command(const chr_lcd_4bit_t *lcd, uint8 command){
+    Std_ReturnType ret = E_OK;
+    if(NULL == lcd){
+        ret = E_NOT_OK;
+ 278:	80 e0       	ldi	r24, 0x00	; 0
+        ret = lcd_send_4bits(lcd, command);
+        /* Send the Enable Signal on the "E" Pin */
+        ret = lcd_4bit_send_enable_signal(lcd);
     }
     return ret;
 }
- 3a6:	08 95       	ret
+ 27a:	df 91       	pop	r29
+ 27c:	cf 91       	pop	r28
+ 27e:	1f 91       	pop	r17
+ 280:	08 95       	ret
 
-000003a8 <main>:
+00000282 <lcd_4bit_init>:
+ * @param lcd
+ * @return Status of the function
+ *          (E_OK) : The function done successfully
+ *          (E_NOT_OK) : The function has issue to perform this action
+ */
+Std_ReturnType lcd_4bit_init(const chr_lcd_4bit_t *lcd){
+ 282:	1f 93       	push	r17
+ 284:	cf 93       	push	r28
+ 286:	df 93       	push	r29
+    Std_ReturnType ret = E_OK;
+    uint8 l_data_pins_counter = ZERO_INIT;
+    if(NULL == lcd){
+ 288:	00 97       	sbiw	r24, 0x00	; 0
+ 28a:	09 f4       	brne	.+2      	; 0x28e <lcd_4bit_init+0xc>
+ 28c:	47 c0       	rjmp	.+142    	; 0x31c <lcd_4bit_init+0x9a>
+ 28e:	ec 01       	movw	r28, r24
+        ret = E_NOT_OK;
+    }
+    else{    
+        ret = gpio_pin_init(&(lcd->lcd_rs));
+ 290:	0e 94 b6 02 	call	0x56c	; 0x56c <gpio_pin_init>
+        ret = gpio_pin_init(&(lcd->lcd_en));
+ 294:	ce 01       	movw	r24, r28
+ 296:	01 96       	adiw	r24, 0x01	; 1
+ 298:	0e 94 b6 02 	call	0x56c	; 0x56c <gpio_pin_init>
+        for(l_data_pins_counter=ZERO_INIT; l_data_pins_counter<4; l_data_pins_counter++){
+ 29c:	10 e0       	ldi	r17, 0x00	; 0
+ 29e:	08 c0       	rjmp	.+16     	; 0x2b0 <lcd_4bit_init+0x2e>
+            ret = gpio_pin_init(&(lcd->lcd_data[l_data_pins_counter]));
+ 2a0:	81 2f       	mov	r24, r17
+ 2a2:	90 e0       	ldi	r25, 0x00	; 0
+ 2a4:	02 96       	adiw	r24, 0x02	; 2
+ 2a6:	8c 0f       	add	r24, r28
+ 2a8:	9d 1f       	adc	r25, r29
+ 2aa:	0e 94 b6 02 	call	0x56c	; 0x56c <gpio_pin_init>
+        ret = E_NOT_OK;
+    }
+    else{    
+        ret = gpio_pin_init(&(lcd->lcd_rs));
+        ret = gpio_pin_init(&(lcd->lcd_en));
+        for(l_data_pins_counter=ZERO_INIT; l_data_pins_counter<4; l_data_pins_counter++){
+ 2ae:	1f 5f       	subi	r17, 0xFF	; 255
+ 2b0:	14 30       	cpi	r17, 0x04	; 4
+ 2b2:	b0 f3       	brcs	.-20     	; 0x2a0 <lcd_4bit_init+0x1e>
+ 2b4:	87 e8       	ldi	r24, 0x87	; 135
+ 2b6:	93 e1       	ldi	r25, 0x13	; 19
+ 2b8:	01 97       	sbiw	r24, 0x01	; 1
+ 2ba:	f1 f7       	brne	.-4      	; 0x2b8 <lcd_4bit_init+0x36>
+ 2bc:	00 c0       	rjmp	.+0      	; 0x2be <lcd_4bit_init+0x3c>
+ 2be:	00 00       	nop
+            ret = gpio_pin_init(&(lcd->lcd_data[l_data_pins_counter]));
+        }
+        _delay_ms(20);
+        ret = lcd_4bit_send_command(lcd, _LCD_8BIT_MODE_2_LINE);
+ 2c0:	68 e3       	ldi	r22, 0x38	; 56
+ 2c2:	ce 01       	movw	r24, r28
+ 2c4:	0e 94 21 01 	call	0x242	; 0x242 <lcd_4bit_send_command>
+ 2c8:	81 ee       	ldi	r24, 0xE1	; 225
+ 2ca:	94 e0       	ldi	r25, 0x04	; 4
+ 2cc:	01 97       	sbiw	r24, 0x01	; 1
+ 2ce:	f1 f7       	brne	.-4      	; 0x2cc <lcd_4bit_init+0x4a>
+ 2d0:	00 c0       	rjmp	.+0      	; 0x2d2 <lcd_4bit_init+0x50>
+ 2d2:	00 00       	nop
+        _delay_ms(5);
+        ret = lcd_4bit_send_command(lcd, _LCD_8BIT_MODE_2_LINE);
+ 2d4:	68 e3       	ldi	r22, 0x38	; 56
+ 2d6:	ce 01       	movw	r24, r28
+ 2d8:	0e 94 21 01 	call	0x242	; 0x242 <lcd_4bit_send_command>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 2dc:	92 e3       	ldi	r25, 0x32	; 50
+ 2de:	9a 95       	dec	r25
+ 2e0:	f1 f7       	brne	.-4      	; 0x2de <lcd_4bit_init+0x5c>
+        _delay_us(150);
+        ret = lcd_4bit_send_command(lcd, _LCD_8BIT_MODE_2_LINE);
+ 2e2:	68 e3       	ldi	r22, 0x38	; 56
+ 2e4:	ce 01       	movw	r24, r28
+ 2e6:	0e 94 21 01 	call	0x242	; 0x242 <lcd_4bit_send_command>
+        
+        ret = lcd_4bit_send_command(lcd, _LCD_CLEAR);
+ 2ea:	61 e0       	ldi	r22, 0x01	; 1
+ 2ec:	ce 01       	movw	r24, r28
+ 2ee:	0e 94 21 01 	call	0x242	; 0x242 <lcd_4bit_send_command>
+        ret = lcd_4bit_send_command(lcd, _LCD_RETURN_HOME);
+ 2f2:	62 e0       	ldi	r22, 0x02	; 2
+ 2f4:	ce 01       	movw	r24, r28
+ 2f6:	0e 94 21 01 	call	0x242	; 0x242 <lcd_4bit_send_command>
+        ret = lcd_4bit_send_command(lcd, _LCD_ENTRY_MODE_INC_SHIFT_OFF);
+ 2fa:	66 e0       	ldi	r22, 0x06	; 6
+ 2fc:	ce 01       	movw	r24, r28
+ 2fe:	0e 94 21 01 	call	0x242	; 0x242 <lcd_4bit_send_command>
+        ret = lcd_4bit_send_command(lcd, _LCD_DISPLAY_ON_UNDERLINE_OFF_CURSOR_OFF);
+ 302:	6c e0       	ldi	r22, 0x0C	; 12
+ 304:	ce 01       	movw	r24, r28
+ 306:	0e 94 21 01 	call	0x242	; 0x242 <lcd_4bit_send_command>
+        ret = lcd_4bit_send_command(lcd, _LCD_4BIT_MODE_2_LINE);
+ 30a:	68 e2       	ldi	r22, 0x28	; 40
+ 30c:	ce 01       	movw	r24, r28
+ 30e:	0e 94 21 01 	call	0x242	; 0x242 <lcd_4bit_send_command>
+        ret = lcd_4bit_send_command(lcd, 0x80);
+ 312:	60 e8       	ldi	r22, 0x80	; 128
+ 314:	ce 01       	movw	r24, r28
+ 316:	0e 94 21 01 	call	0x242	; 0x242 <lcd_4bit_send_command>
+ 31a:	01 c0       	rjmp	.+2      	; 0x31e <lcd_4bit_init+0x9c>
+ */
+Std_ReturnType lcd_4bit_init(const chr_lcd_4bit_t *lcd){
+    Std_ReturnType ret = E_OK;
+    uint8 l_data_pins_counter = ZERO_INIT;
+    if(NULL == lcd){
+        ret = E_NOT_OK;
+ 31c:	80 e0       	ldi	r24, 0x00	; 0
+        ret = lcd_4bit_send_command(lcd, _LCD_DISPLAY_ON_UNDERLINE_OFF_CURSOR_OFF);
+        ret = lcd_4bit_send_command(lcd, _LCD_4BIT_MODE_2_LINE);
+        ret = lcd_4bit_send_command(lcd, 0x80);
+    }
+    return ret;
+}
+ 31e:	df 91       	pop	r29
+ 320:	cf 91       	pop	r28
+ 322:	1f 91       	pop	r17
+ 324:	08 95       	ret
+
+00000326 <lcd_4bit_send_char_data>:
+ * @param data The data that we need to send to the LCD
+ * @return Status of the function
+ *          (E_OK) : The function done successfully
+ *          (E_NOT_OK) : The function has issue to perform this action
+ */
+Std_ReturnType lcd_4bit_send_char_data(const chr_lcd_4bit_t *lcd, uint8 data){
+ 326:	1f 93       	push	r17
+ 328:	cf 93       	push	r28
+ 32a:	df 93       	push	r29
+    Std_ReturnType ret = E_OK;
+    if(NULL == lcd){
+ 32c:	00 97       	sbiw	r24, 0x00	; 0
+ 32e:	b1 f0       	breq	.+44     	; 0x35c <lcd_4bit_send_char_data+0x36>
+ 330:	16 2f       	mov	r17, r22
+ 332:	ec 01       	movw	r28, r24
+        ret = E_NOT_OK;
+    }
+    else{    
+        /* R/W Pin connected to the GND -> Logic (0) "Hard Wired" */
+        /* Write Logic (1) to the "Register Select" Pin to select the "Data Register"  */
+        ret = gpio_pin_write_logic(&(lcd->lcd_rs), GPIO_HIGH);
+ 334:	61 e0       	ldi	r22, 0x01	; 1
+ 336:	0e 94 48 02 	call	0x490	; 0x490 <gpio_pin_write_logic>
+        /* Send the Data through the (4-Pins" Data lines */
+        ret = lcd_send_4bits(lcd, data >> 4);
+ 33a:	61 2f       	mov	r22, r17
+ 33c:	62 95       	swap	r22
+ 33e:	6f 70       	andi	r22, 0x0F	; 15
+ 340:	ce 01       	movw	r24, r28
+ 342:	0e 94 ed 00 	call	0x1da	; 0x1da <lcd_send_4bits>
+        /* Send the Enable Signal on the "E" Pin */
+        ret = lcd_4bit_send_enable_signal(lcd);
+ 346:	ce 01       	movw	r24, r28
+ 348:	0e 94 0f 01 	call	0x21e	; 0x21e <lcd_4bit_send_enable_signal>
+        /* Send the Data through the (4-Pins" Data lines */
+        ret = lcd_send_4bits(lcd, data);
+ 34c:	61 2f       	mov	r22, r17
+ 34e:	ce 01       	movw	r24, r28
+ 350:	0e 94 ed 00 	call	0x1da	; 0x1da <lcd_send_4bits>
+        /* Send the Enable Signal on the "E" Pin */
+        ret = lcd_4bit_send_enable_signal(lcd);
+ 354:	ce 01       	movw	r24, r28
+ 356:	0e 94 0f 01 	call	0x21e	; 0x21e <lcd_4bit_send_enable_signal>
+ 35a:	01 c0       	rjmp	.+2      	; 0x35e <lcd_4bit_send_char_data+0x38>
+ *          (E_NOT_OK) : The function has issue to perform this action
+ */
+Std_ReturnType lcd_4bit_send_char_data(const chr_lcd_4bit_t *lcd, uint8 data){
+    Std_ReturnType ret = E_OK;
+    if(NULL == lcd){
+        ret = E_NOT_OK;
+ 35c:	80 e0       	ldi	r24, 0x00	; 0
+        ret = lcd_send_4bits(lcd, data);
+        /* Send the Enable Signal on the "E" Pin */
+        ret = lcd_4bit_send_enable_signal(lcd);
+    }
+    return ret;
+}
+ 35e:	df 91       	pop	r29
+ 360:	cf 91       	pop	r28
+ 362:	1f 91       	pop	r17
+ 364:	08 95       	ret
+
+00000366 <lcd_4bit_send_string>:
+ * @param str
+ * @return Status of the function
+ *          (E_OK) : The function done successfully
+ *          (E_NOT_OK) : The function has issue to perform this action
+ */
+Std_ReturnType lcd_4bit_send_string(const chr_lcd_4bit_t *lcd, uint8 *str){
+ 366:	0f 93       	push	r16
+ 368:	1f 93       	push	r17
+ 36a:	cf 93       	push	r28
+ 36c:	df 93       	push	r29
+ 36e:	8c 01       	movw	r16, r24
+ 370:	eb 01       	movw	r28, r22
+    Std_ReturnType ret = E_OK;
+    if(NULL == lcd){
+ 372:	89 2b       	or	r24, r25
+ 374:	51 f0       	breq	.+20     	; 0x38a <lcd_4bit_send_string+0x24>
+ 376:	81 e0       	ldi	r24, 0x01	; 1
+ 378:	04 c0       	rjmp	.+8      	; 0x382 <lcd_4bit_send_string+0x1c>
+        ret = E_NOT_OK;
+    }
+    else{    
+        while(*str){
+            ret = lcd_4bit_send_char_data(lcd, *str++);
+ 37a:	21 96       	adiw	r28, 0x01	; 1
+ 37c:	c8 01       	movw	r24, r16
+ 37e:	0e 94 93 01 	call	0x326	; 0x326 <lcd_4bit_send_char_data>
+    Std_ReturnType ret = E_OK;
+    if(NULL == lcd){
+        ret = E_NOT_OK;
+    }
+    else{    
+        while(*str){
+ 382:	68 81       	ld	r22, Y
+ 384:	61 11       	cpse	r22, r1
+ 386:	f9 cf       	rjmp	.-14     	; 0x37a <lcd_4bit_send_string+0x14>
+ 388:	01 c0       	rjmp	.+2      	; 0x38c <lcd_4bit_send_string+0x26>
+ *          (E_NOT_OK) : The function has issue to perform this action
+ */
+Std_ReturnType lcd_4bit_send_string(const chr_lcd_4bit_t *lcd, uint8 *str){
+    Std_ReturnType ret = E_OK;
+    if(NULL == lcd){
+        ret = E_NOT_OK;
+ 38a:	80 e0       	ldi	r24, 0x00	; 0
+        while(*str){
+            ret = lcd_4bit_send_char_data(lcd, *str++);
+        }
+    }
+    return ret;
+}
+ 38c:	df 91       	pop	r29
+ 38e:	cf 91       	pop	r28
+ 390:	1f 91       	pop	r17
+ 392:	0f 91       	pop	r16
+ 394:	08 95       	ret
+
+00000396 <main>:
 	.keypad_column_pins[3].logic = GPIO_LOW
 };
 
 
 int main(void)
 {
- 3a8:	cf 93       	push	r28
- 3aa:	df 93       	push	r29
- 3ac:	cd b7       	in	r28, 0x3d	; 61
- 3ae:	de b7       	in	r29, 0x3e	; 62
- 3b0:	61 97       	sbiw	r28, 0x11	; 17
- 3b2:	0f b6       	in	r0, 0x3f	; 63
- 3b4:	f8 94       	cli
- 3b6:	de bf       	out	0x3e, r29	; 62
- 3b8:	0f be       	out	0x3f, r0	; 63
- 3ba:	cd bf       	out	0x3d, r28	; 61
+ 396:	cf 93       	push	r28
+ 398:	df 93       	push	r29
+ 39a:	cd b7       	in	r28, 0x3d	; 61
+ 39c:	de b7       	in	r29, 0x3e	; 62
+ 39e:	2c 97       	sbiw	r28, 0x0c	; 12
+ 3a0:	0f b6       	in	r0, 0x3f	; 63
+ 3a2:	f8 94       	cli
+ 3a4:	de bf       	out	0x3e, r29	; 62
+ 3a6:	0f be       	out	0x3f, r0	; 63
+ 3a8:	cd bf       	out	0x3d, r28	; 61
 	/* Initialize LCD and Keypad */
 	lcd_4bit_init(&_lcd);
- 3bc:	88 e6       	ldi	r24, 0x68	; 104
- 3be:	90 e0       	ldi	r25, 0x00	; 0
- 3c0:	0e 94 29 01 	call	0x252	; 0x252 <lcd_4bit_init>
+ 3aa:	8a e6       	ldi	r24, 0x6A	; 106
+ 3ac:	90 e0       	ldi	r25, 0x00	; 0
+ 3ae:	0e 94 41 01 	call	0x282	; 0x282 <lcd_4bit_init>
 	keypad_init(&_keypad);
- 3c4:	80 e6       	ldi	r24, 0x60	; 96
- 3c6:	90 e0       	ldi	r25, 0x00	; 0
- 3c8:	0e 94 41 00 	call	0x82	; 0x82 <keypad_init>
+ 3b2:	80 e6       	ldi	r24, 0x60	; 96
+ 3b4:	90 e0       	ldi	r25, 0x00	; 0
+ 3b6:	0e 94 41 00 	call	0x82	; 0x82 <keypad_init>
 
 	char message[11] = "HELLO LCD!";
- 3cc:	8b e0       	ldi	r24, 0x0B	; 11
- 3ce:	e6 e9       	ldi	r30, 0x96	; 150
- 3d0:	f0 e0       	ldi	r31, 0x00	; 0
- 3d2:	de 01       	movw	r26, r28
- 3d4:	11 96       	adiw	r26, 0x01	; 1
- 3d6:	01 90       	ld	r0, Z+
- 3d8:	0d 92       	st	X+, r0
- 3da:	8a 95       	dec	r24
- 3dc:	e1 f7       	brne	.-8      	; 0x3d6 <main+0x2e>
+ 3ba:	8b e0       	ldi	r24, 0x0B	; 11
+ 3bc:	e0 ea       	ldi	r30, 0xA0	; 160
+ 3be:	f0 e0       	ldi	r31, 0x00	; 0
+ 3c0:	de 01       	movw	r26, r28
+ 3c2:	11 96       	adiw	r26, 0x01	; 1
+ 3c4:	01 90       	ld	r0, Z+
+ 3c6:	0d 92       	st	X+, r0
+ 3c8:	8a 95       	dec	r24
+ 3ca:	e1 f7       	brne	.-8      	; 0x3c4 <main+0x2e>
 	lcd_4bit_send_string(&_lcd, message);
- 3de:	be 01       	movw	r22, r28
- 3e0:	6f 5f       	subi	r22, 0xFF	; 255
- 3e2:	7f 4f       	sbci	r23, 0xFF	; 255
- 3e4:	88 e6       	ldi	r24, 0x68	; 104
- 3e6:	90 e0       	ldi	r25, 0x00	; 0
- 3e8:	0e 94 9b 01 	call	0x336	; 0x336 <lcd_4bit_send_string>
-
-	char input_buffer[5] = {0};  // Buffer to store numeric input from keypad
- 3ec:	fe 01       	movw	r30, r28
- 3ee:	3c 96       	adiw	r30, 0x0c	; 12
- 3f0:	85 e0       	ldi	r24, 0x05	; 5
- 3f2:	df 01       	movw	r26, r30
- 3f4:	1d 92       	st	X+, r1
- 3f6:	8a 95       	dec	r24
- 3f8:	e9 f7       	brne	.-6      	; 0x3f4 <main+0x4c>
-	int buffer_index = 0;        // Index to track buffer position
- 3fa:	00 e0       	ldi	r16, 0x00	; 0
- 3fc:	10 e0       	ldi	r17, 0x00	; 0
+ 3cc:	be 01       	movw	r22, r28
+ 3ce:	6f 5f       	subi	r22, 0xFF	; 255
+ 3d0:	7f 4f       	sbci	r23, 0xFF	; 255
+ 3d2:	8a e6       	ldi	r24, 0x6A	; 106
+ 3d4:	90 e0       	ldi	r25, 0x00	; 0
+ 3d6:	0e 94 b3 01 	call	0x366	; 0x366 <lcd_4bit_send_string>
 	char key;
 	
 	while (1)
 	{
 		/* Scan keypad for input */
 		keypad_get_value(&_keypad,&key);
- 3fe:	be 01       	movw	r22, r28
- 400:	6f 5e       	subi	r22, 0xEF	; 239
- 402:	7f 4f       	sbci	r23, 0xFF	; 255
- 404:	80 e6       	ldi	r24, 0x60	; 96
- 406:	90 e0       	ldi	r25, 0x00	; 0
- 408:	0e 94 64 00 	call	0xc8	; 0xc8 <keypad_get_value>
-
-		if (key >= '0' && key <= '9')
- 40c:	89 89       	ldd	r24, Y+17	; 0x11
- 40e:	90 ed       	ldi	r25, 0xD0	; 208
- 410:	98 0f       	add	r25, r24
- 412:	9a 30       	cpi	r25, 0x0A	; 10
- 414:	d0 f5       	brcc	.+116    	; 0x48a <__EEPROM_REGION_LENGTH__+0x8a>
+ 3da:	be 01       	movw	r22, r28
+ 3dc:	64 5f       	subi	r22, 0xF4	; 244
+ 3de:	7f 4f       	sbci	r23, 0xFF	; 255
+ 3e0:	80 e6       	ldi	r24, 0x60	; 96
+ 3e2:	90 e0       	ldi	r25, 0x00	; 0
+ 3e4:	0e 94 64 00 	call	0xc8	; 0xc8 <keypad_get_value>
+		if(key != 0)
+ 3e8:	6c 85       	ldd	r22, Y+12	; 0x0c
+ 3ea:	66 23       	and	r22, r22
+ 3ec:	51 f0       	breq	.+20     	; 0x402 <__EEPROM_REGION_LENGTH__+0x2>
 		{
-			/* Valid numeric key pressed, store in buffer and display on LCD */
-			input_buffer[buffer_index++] = key;
- 416:	78 01       	movw	r14, r16
- 418:	bf ef       	ldi	r27, 0xFF	; 255
- 41a:	eb 1a       	sub	r14, r27
- 41c:	fb 0a       	sbc	r15, r27
- 41e:	ec e0       	ldi	r30, 0x0C	; 12
- 420:	f0 e0       	ldi	r31, 0x00	; 0
- 422:	ec 0f       	add	r30, r28
- 424:	fd 1f       	adc	r31, r29
- 426:	e0 0f       	add	r30, r16
- 428:	f1 1f       	adc	r31, r17
- 42a:	80 83       	st	Z, r24
-			input_buffer[buffer_index] = '\0';  // Ensure null-terminated string
- 42c:	ec e0       	ldi	r30, 0x0C	; 12
- 42e:	f0 e0       	ldi	r31, 0x00	; 0
- 430:	ec 0f       	add	r30, r28
- 432:	fd 1f       	adc	r31, r29
- 434:	ee 0d       	add	r30, r14
- 436:	ff 1d       	adc	r31, r15
- 438:	10 82       	st	Z, r1
-
-			/* Display the number on LCD */
+			lcd_4bit_send_char_data(&_lcd,key);
+ 3ee:	8a e6       	ldi	r24, 0x6A	; 106
+ 3f0:	90 e0       	ldi	r25, 0x00	; 0
+ 3f2:	0e 94 93 01 	call	0x326	; 0x326 <lcd_4bit_send_char_data>
 			lcd_4bit_send_command(&_lcd,_LCD_CLEAR);
- 43a:	61 e0       	ldi	r22, 0x01	; 1
- 43c:	88 e6       	ldi	r24, 0x68	; 104
- 43e:	90 e0       	ldi	r25, 0x00	; 0
- 440:	0e 94 09 01 	call	0x212	; 0x212 <lcd_4bit_send_command>
-			lcd_4bit_set_cursor(&_lcd, 1, 1);  // Move cursor to the second line
- 444:	41 e0       	ldi	r20, 0x01	; 1
- 446:	61 e0       	ldi	r22, 0x01	; 1
- 448:	88 e6       	ldi	r24, 0x68	; 104
- 44a:	90 e0       	ldi	r25, 0x00	; 0
- 44c:	0e 94 b3 01 	call	0x366	; 0x366 <lcd_4bit_set_cursor>
-			lcd_4bit_send_string(&_lcd, input_buffer);
- 450:	be 01       	movw	r22, r28
- 452:	64 5f       	subi	r22, 0xF4	; 244
- 454:	7f 4f       	sbci	r23, 0xFF	; 255
- 456:	88 e6       	ldi	r24, 0x68	; 104
- 458:	90 e0       	ldi	r25, 0x00	; 0
- 45a:	0e 94 9b 01 	call	0x336	; 0x336 <lcd_4bit_send_string>
-
-			/* Reset buffer after displaying */
-			if (buffer_index >= 4)  // Assuming a maximum of 4 digits
- 45e:	84 e0       	ldi	r24, 0x04	; 4
- 460:	e8 16       	cp	r14, r24
- 462:	f1 04       	cpc	r15, r1
- 464:	5c f4       	brge	.+22     	; 0x47c <__EEPROM_REGION_LENGTH__+0x7c>
-		keypad_get_value(&_keypad,&key);
-
-		if (key >= '0' && key <= '9')
+ 3f6:	61 e0       	ldi	r22, 0x01	; 1
+ 3f8:	8a e6       	ldi	r24, 0x6A	; 106
+ 3fa:	90 e0       	ldi	r25, 0x00	; 0
+ 3fc:	0e 94 21 01 	call	0x242	; 0x242 <lcd_4bit_send_command>
+ 400:	ec cf       	rjmp	.-40     	; 0x3da <main+0x44>
+		}
+		else
 		{
-			/* Valid numeric key pressed, store in buffer and display on LCD */
-			input_buffer[buffer_index++] = key;
- 466:	87 01       	movw	r16, r14
- 468:	10 c0       	rjmp	.+32     	; 0x48a <__EEPROM_REGION_LENGTH__+0x8a>
-			/* Reset buffer after displaying */
-			if (buffer_index >= 4)  // Assuming a maximum of 4 digits
-			{
-				buffer_index = 0;
-				for (int i = 0; i < 5; ++i)
-				input_buffer[i] = 0;
- 46a:	ec e0       	ldi	r30, 0x0C	; 12
- 46c:	f0 e0       	ldi	r31, 0x00	; 0
- 46e:	ec 0f       	add	r30, r28
- 470:	fd 1f       	adc	r31, r29
- 472:	e8 0f       	add	r30, r24
- 474:	f9 1f       	adc	r31, r25
- 476:	10 82       	st	Z, r1
+			lcd_4bit_send_char_data(&_lcd,'d');
+ 402:	64 e6       	ldi	r22, 0x64	; 100
+ 404:	8a e6       	ldi	r24, 0x6A	; 106
+ 406:	90 e0       	ldi	r25, 0x00	; 0
+ 408:	0e 94 93 01 	call	0x326	; 0x326 <lcd_4bit_send_char_data>
+ 40c:	e6 cf       	rjmp	.-52     	; 0x3da <main+0x44>
 
-			/* Reset buffer after displaying */
-			if (buffer_index >= 4)  // Assuming a maximum of 4 digits
-			{
-				buffer_index = 0;
-				for (int i = 0; i < 5; ++i)
- 478:	01 96       	adiw	r24, 0x01	; 1
- 47a:	02 c0       	rjmp	.+4      	; 0x480 <__EEPROM_REGION_LENGTH__+0x80>
- 47c:	80 e0       	ldi	r24, 0x00	; 0
- 47e:	90 e0       	ldi	r25, 0x00	; 0
- 480:	85 30       	cpi	r24, 0x05	; 5
- 482:	91 05       	cpc	r25, r1
- 484:	94 f3       	brlt	.-28     	; 0x46a <__EEPROM_REGION_LENGTH__+0x6a>
-			lcd_4bit_send_string(&_lcd, input_buffer);
-
-			/* Reset buffer after displaying */
-			if (buffer_index >= 4)  // Assuming a maximum of 4 digits
-			{
-				buffer_index = 0;
- 486:	00 e0       	ldi	r16, 0x00	; 0
- 488:	10 e0       	ldi	r17, 0x00	; 0
- 48a:	a7 ea       	ldi	r26, 0xA7	; 167
- 48c:	b1 e6       	ldi	r27, 0x61	; 97
- 48e:	11 97       	sbiw	r26, 0x01	; 1
- 490:	f1 f7       	brne	.-4      	; 0x48e <__EEPROM_REGION_LENGTH__+0x8e>
- 492:	00 c0       	rjmp	.+0      	; 0x494 <__EEPROM_REGION_LENGTH__+0x94>
- 494:	00 00       	nop
- 496:	b3 cf       	rjmp	.-154    	; 0x3fe <main+0x56>
-
-00000498 <gpio_pin_direction_init>:
+0000040e <gpio_pin_direction_init>:
     else
     {
         TOGGLE_BIT(*port_registers[_pin_config->port], _pin_config->pin);
     }
     return ret;
 }
- 498:	fc 01       	movw	r30, r24
- 49a:	89 2b       	or	r24, r25
- 49c:	d1 f1       	breq	.+116    	; 0x512 <gpio_pin_direction_init+0x7a>
- 49e:	20 81       	ld	r18, Z
- 4a0:	26 95       	lsr	r18
- 4a2:	26 95       	lsr	r18
- 4a4:	26 95       	lsr	r18
- 4a6:	27 70       	andi	r18, 0x07	; 7
- 4a8:	80 81       	ld	r24, Z
- 4aa:	86 fb       	bst	r24, 6
- 4ac:	99 27       	eor	r25, r25
- 4ae:	90 f9       	bld	r25, 0
- 4b0:	86 ff       	sbrs	r24, 6
- 4b2:	18 c0       	rjmp	.+48     	; 0x4e4 <gpio_pin_direction_init+0x4c>
- 4b4:	91 30       	cpi	r25, 0x01	; 1
- 4b6:	79 f5       	brne	.+94     	; 0x516 <gpio_pin_direction_init+0x7e>
- 4b8:	e8 2f       	mov	r30, r24
- 4ba:	e7 70       	andi	r30, 0x07	; 7
- 4bc:	f0 e0       	ldi	r31, 0x00	; 0
- 4be:	ee 0f       	add	r30, r30
- 4c0:	ff 1f       	adc	r31, r31
- 4c2:	ea 58       	subi	r30, 0x8A	; 138
- 4c4:	ff 4f       	sbci	r31, 0xFF	; 255
- 4c6:	01 90       	ld	r0, Z+
- 4c8:	f0 81       	ld	r31, Z
- 4ca:	e0 2d       	mov	r30, r0
- 4cc:	30 81       	ld	r19, Z
- 4ce:	81 e0       	ldi	r24, 0x01	; 1
- 4d0:	90 e0       	ldi	r25, 0x00	; 0
- 4d2:	02 c0       	rjmp	.+4      	; 0x4d8 <gpio_pin_direction_init+0x40>
- 4d4:	88 0f       	add	r24, r24
- 4d6:	99 1f       	adc	r25, r25
- 4d8:	2a 95       	dec	r18
- 4da:	e2 f7       	brpl	.-8      	; 0x4d4 <gpio_pin_direction_init+0x3c>
- 4dc:	83 2b       	or	r24, r19
- 4de:	80 83       	st	Z, r24
- 4e0:	81 e0       	ldi	r24, 0x01	; 1
- 4e2:	08 95       	ret
- 4e4:	e0 81       	ld	r30, Z
- 4e6:	e7 70       	andi	r30, 0x07	; 7
- 4e8:	f0 e0       	ldi	r31, 0x00	; 0
- 4ea:	ee 0f       	add	r30, r30
- 4ec:	ff 1f       	adc	r31, r31
- 4ee:	ea 58       	subi	r30, 0x8A	; 138
- 4f0:	ff 4f       	sbci	r31, 0xFF	; 255
- 4f2:	01 90       	ld	r0, Z+
- 4f4:	f0 81       	ld	r31, Z
- 4f6:	e0 2d       	mov	r30, r0
- 4f8:	30 81       	ld	r19, Z
- 4fa:	81 e0       	ldi	r24, 0x01	; 1
- 4fc:	90 e0       	ldi	r25, 0x00	; 0
- 4fe:	02 c0       	rjmp	.+4      	; 0x504 <gpio_pin_direction_init+0x6c>
- 500:	88 0f       	add	r24, r24
- 502:	99 1f       	adc	r25, r25
- 504:	2a 95       	dec	r18
- 506:	e2 f7       	brpl	.-8      	; 0x500 <gpio_pin_direction_init+0x68>
- 508:	80 95       	com	r24
- 50a:	83 23       	and	r24, r19
- 50c:	80 83       	st	Z, r24
- 50e:	81 e0       	ldi	r24, 0x01	; 1
- 510:	08 95       	ret
- 512:	80 e0       	ldi	r24, 0x00	; 0
- 514:	08 95       	ret
- 516:	80 e0       	ldi	r24, 0x00	; 0
+ 40e:	fc 01       	movw	r30, r24
+ 410:	89 2b       	or	r24, r25
+ 412:	d1 f1       	breq	.+116    	; 0x488 <gpio_pin_direction_init+0x7a>
+ 414:	20 81       	ld	r18, Z
+ 416:	26 95       	lsr	r18
+ 418:	26 95       	lsr	r18
+ 41a:	26 95       	lsr	r18
+ 41c:	27 70       	andi	r18, 0x07	; 7
+ 41e:	80 81       	ld	r24, Z
+ 420:	86 fb       	bst	r24, 6
+ 422:	99 27       	eor	r25, r25
+ 424:	90 f9       	bld	r25, 0
+ 426:	86 ff       	sbrs	r24, 6
+ 428:	18 c0       	rjmp	.+48     	; 0x45a <gpio_pin_direction_init+0x4c>
+ 42a:	91 30       	cpi	r25, 0x01	; 1
+ 42c:	79 f5       	brne	.+94     	; 0x48c <gpio_pin_direction_init+0x7e>
+ 42e:	e8 2f       	mov	r30, r24
+ 430:	e7 70       	andi	r30, 0x07	; 7
+ 432:	f0 e0       	ldi	r31, 0x00	; 0
+ 434:	ee 0f       	add	r30, r30
+ 436:	ff 1f       	adc	r31, r31
+ 438:	e8 58       	subi	r30, 0x88	; 136
+ 43a:	ff 4f       	sbci	r31, 0xFF	; 255
+ 43c:	01 90       	ld	r0, Z+
+ 43e:	f0 81       	ld	r31, Z
+ 440:	e0 2d       	mov	r30, r0
+ 442:	30 81       	ld	r19, Z
+ 444:	81 e0       	ldi	r24, 0x01	; 1
+ 446:	90 e0       	ldi	r25, 0x00	; 0
+ 448:	02 c0       	rjmp	.+4      	; 0x44e <gpio_pin_direction_init+0x40>
+ 44a:	88 0f       	add	r24, r24
+ 44c:	99 1f       	adc	r25, r25
+ 44e:	2a 95       	dec	r18
+ 450:	e2 f7       	brpl	.-8      	; 0x44a <gpio_pin_direction_init+0x3c>
+ 452:	83 2b       	or	r24, r19
+ 454:	80 83       	st	Z, r24
+ 456:	81 e0       	ldi	r24, 0x01	; 1
+ 458:	08 95       	ret
+ 45a:	e0 81       	ld	r30, Z
+ 45c:	e7 70       	andi	r30, 0x07	; 7
+ 45e:	f0 e0       	ldi	r31, 0x00	; 0
+ 460:	ee 0f       	add	r30, r30
+ 462:	ff 1f       	adc	r31, r31
+ 464:	e8 58       	subi	r30, 0x88	; 136
+ 466:	ff 4f       	sbci	r31, 0xFF	; 255
+ 468:	01 90       	ld	r0, Z+
+ 46a:	f0 81       	ld	r31, Z
+ 46c:	e0 2d       	mov	r30, r0
+ 46e:	30 81       	ld	r19, Z
+ 470:	81 e0       	ldi	r24, 0x01	; 1
+ 472:	90 e0       	ldi	r25, 0x00	; 0
+ 474:	02 c0       	rjmp	.+4      	; 0x47a <gpio_pin_direction_init+0x6c>
+ 476:	88 0f       	add	r24, r24
+ 478:	99 1f       	adc	r25, r25
+ 47a:	2a 95       	dec	r18
+ 47c:	e2 f7       	brpl	.-8      	; 0x476 <gpio_pin_direction_init+0x68>
+ 47e:	80 95       	com	r24
+ 480:	83 23       	and	r24, r19
+ 482:	80 83       	st	Z, r24
+ 484:	81 e0       	ldi	r24, 0x01	; 1
+ 486:	08 95       	ret
+ 488:	80 e0       	ldi	r24, 0x00	; 0
+ 48a:	08 95       	ret
+ 48c:	80 e0       	ldi	r24, 0x00	; 0
+ 48e:	08 95       	ret
+
+00000490 <gpio_pin_write_logic>:
+ 490:	00 97       	sbiw	r24, 0x00	; 0
+ 492:	09 f4       	brne	.+2      	; 0x496 <gpio_pin_write_logic+0x6>
+ 494:	42 c0       	rjmp	.+132    	; 0x51a <gpio_pin_write_logic+0x8a>
+ 496:	66 23       	and	r22, r22
+ 498:	09 f1       	breq	.+66     	; 0x4dc <gpio_pin_write_logic+0x4c>
+ 49a:	61 30       	cpi	r22, 0x01	; 1
+ 49c:	09 f0       	breq	.+2      	; 0x4a0 <gpio_pin_write_logic+0x10>
+ 49e:	3f c0       	rjmp	.+126    	; 0x51e <gpio_pin_write_logic+0x8e>
+ 4a0:	fc 01       	movw	r30, r24
+ 4a2:	80 81       	ld	r24, Z
+ 4a4:	e8 2f       	mov	r30, r24
+ 4a6:	e7 70       	andi	r30, 0x07	; 7
+ 4a8:	f0 e0       	ldi	r31, 0x00	; 0
+ 4aa:	ee 0f       	add	r30, r30
+ 4ac:	ff 1f       	adc	r31, r31
+ 4ae:	e0 59       	subi	r30, 0x90	; 144
+ 4b0:	ff 4f       	sbci	r31, 0xFF	; 255
+ 4b2:	01 90       	ld	r0, Z+
+ 4b4:	f0 81       	ld	r31, Z
+ 4b6:	e0 2d       	mov	r30, r0
+ 4b8:	40 81       	ld	r20, Z
+ 4ba:	86 95       	lsr	r24
+ 4bc:	86 95       	lsr	r24
+ 4be:	86 95       	lsr	r24
+ 4c0:	87 70       	andi	r24, 0x07	; 7
+ 4c2:	21 e0       	ldi	r18, 0x01	; 1
+ 4c4:	30 e0       	ldi	r19, 0x00	; 0
+ 4c6:	b9 01       	movw	r22, r18
+ 4c8:	02 c0       	rjmp	.+4      	; 0x4ce <gpio_pin_write_logic+0x3e>
+ 4ca:	66 0f       	add	r22, r22
+ 4cc:	77 1f       	adc	r23, r23
+ 4ce:	8a 95       	dec	r24
+ 4d0:	e2 f7       	brpl	.-8      	; 0x4ca <gpio_pin_write_logic+0x3a>
+ 4d2:	cb 01       	movw	r24, r22
+ 4d4:	84 2b       	or	r24, r20
+ 4d6:	80 83       	st	Z, r24
+ 4d8:	81 e0       	ldi	r24, 0x01	; 1
+ 4da:	08 95       	ret
+ 4dc:	fc 01       	movw	r30, r24
+ 4de:	80 81       	ld	r24, Z
+ 4e0:	e8 2f       	mov	r30, r24
+ 4e2:	e7 70       	andi	r30, 0x07	; 7
+ 4e4:	f0 e0       	ldi	r31, 0x00	; 0
+ 4e6:	ee 0f       	add	r30, r30
+ 4e8:	ff 1f       	adc	r31, r31
+ 4ea:	e0 59       	subi	r30, 0x90	; 144
+ 4ec:	ff 4f       	sbci	r31, 0xFF	; 255
+ 4ee:	01 90       	ld	r0, Z+
+ 4f0:	f0 81       	ld	r31, Z
+ 4f2:	e0 2d       	mov	r30, r0
+ 4f4:	40 81       	ld	r20, Z
+ 4f6:	86 95       	lsr	r24
+ 4f8:	86 95       	lsr	r24
+ 4fa:	86 95       	lsr	r24
+ 4fc:	87 70       	andi	r24, 0x07	; 7
+ 4fe:	21 e0       	ldi	r18, 0x01	; 1
+ 500:	30 e0       	ldi	r19, 0x00	; 0
+ 502:	b9 01       	movw	r22, r18
+ 504:	02 c0       	rjmp	.+4      	; 0x50a <gpio_pin_write_logic+0x7a>
+ 506:	66 0f       	add	r22, r22
+ 508:	77 1f       	adc	r23, r23
+ 50a:	8a 95       	dec	r24
+ 50c:	e2 f7       	brpl	.-8      	; 0x506 <gpio_pin_write_logic+0x76>
+ 50e:	cb 01       	movw	r24, r22
+ 510:	80 95       	com	r24
+ 512:	84 23       	and	r24, r20
+ 514:	80 83       	st	Z, r24
+ 516:	81 e0       	ldi	r24, 0x01	; 1
  518:	08 95       	ret
+ 51a:	80 e0       	ldi	r24, 0x00	; 0
+ 51c:	08 95       	ret
+ 51e:	80 e0       	ldi	r24, 0x00	; 0
+ 520:	08 95       	ret
 
-0000051a <gpio_pin_write_logic>:
- 51a:	00 97       	sbiw	r24, 0x00	; 0
- 51c:	09 f4       	brne	.+2      	; 0x520 <gpio_pin_write_logic+0x6>
- 51e:	42 c0       	rjmp	.+132    	; 0x5a4 <gpio_pin_write_logic+0x8a>
- 520:	66 23       	and	r22, r22
- 522:	09 f1       	breq	.+66     	; 0x566 <gpio_pin_write_logic+0x4c>
- 524:	61 30       	cpi	r22, 0x01	; 1
- 526:	09 f0       	breq	.+2      	; 0x52a <gpio_pin_write_logic+0x10>
- 528:	3f c0       	rjmp	.+126    	; 0x5a8 <gpio_pin_write_logic+0x8e>
- 52a:	fc 01       	movw	r30, r24
- 52c:	80 81       	ld	r24, Z
- 52e:	e8 2f       	mov	r30, r24
- 530:	e7 70       	andi	r30, 0x07	; 7
- 532:	f0 e0       	ldi	r31, 0x00	; 0
- 534:	ee 0f       	add	r30, r30
- 536:	ff 1f       	adc	r31, r31
- 538:	e2 59       	subi	r30, 0x92	; 146
- 53a:	ff 4f       	sbci	r31, 0xFF	; 255
- 53c:	01 90       	ld	r0, Z+
- 53e:	f0 81       	ld	r31, Z
- 540:	e0 2d       	mov	r30, r0
- 542:	40 81       	ld	r20, Z
- 544:	86 95       	lsr	r24
- 546:	86 95       	lsr	r24
- 548:	86 95       	lsr	r24
- 54a:	87 70       	andi	r24, 0x07	; 7
- 54c:	21 e0       	ldi	r18, 0x01	; 1
- 54e:	30 e0       	ldi	r19, 0x00	; 0
- 550:	b9 01       	movw	r22, r18
- 552:	02 c0       	rjmp	.+4      	; 0x558 <gpio_pin_write_logic+0x3e>
- 554:	66 0f       	add	r22, r22
- 556:	77 1f       	adc	r23, r23
- 558:	8a 95       	dec	r24
- 55a:	e2 f7       	brpl	.-8      	; 0x554 <gpio_pin_write_logic+0x3a>
- 55c:	cb 01       	movw	r24, r22
- 55e:	84 2b       	or	r24, r20
- 560:	80 83       	st	Z, r24
- 562:	81 e0       	ldi	r24, 0x01	; 1
- 564:	08 95       	ret
- 566:	fc 01       	movw	r30, r24
- 568:	80 81       	ld	r24, Z
- 56a:	e8 2f       	mov	r30, r24
- 56c:	e7 70       	andi	r30, 0x07	; 7
- 56e:	f0 e0       	ldi	r31, 0x00	; 0
- 570:	ee 0f       	add	r30, r30
- 572:	ff 1f       	adc	r31, r31
- 574:	e2 59       	subi	r30, 0x92	; 146
- 576:	ff 4f       	sbci	r31, 0xFF	; 255
- 578:	01 90       	ld	r0, Z+
- 57a:	f0 81       	ld	r31, Z
- 57c:	e0 2d       	mov	r30, r0
- 57e:	40 81       	ld	r20, Z
- 580:	86 95       	lsr	r24
- 582:	86 95       	lsr	r24
- 584:	86 95       	lsr	r24
- 586:	87 70       	andi	r24, 0x07	; 7
- 588:	21 e0       	ldi	r18, 0x01	; 1
- 58a:	30 e0       	ldi	r19, 0x00	; 0
- 58c:	b9 01       	movw	r22, r18
- 58e:	02 c0       	rjmp	.+4      	; 0x594 <gpio_pin_write_logic+0x7a>
- 590:	66 0f       	add	r22, r22
- 592:	77 1f       	adc	r23, r23
- 594:	8a 95       	dec	r24
- 596:	e2 f7       	brpl	.-8      	; 0x590 <gpio_pin_write_logic+0x76>
- 598:	cb 01       	movw	r24, r22
- 59a:	80 95       	com	r24
- 59c:	84 23       	and	r24, r20
- 59e:	80 83       	st	Z, r24
- 5a0:	81 e0       	ldi	r24, 0x01	; 1
- 5a2:	08 95       	ret
- 5a4:	80 e0       	ldi	r24, 0x00	; 0
- 5a6:	08 95       	ret
- 5a8:	80 e0       	ldi	r24, 0x00	; 0
- 5aa:	08 95       	ret
+00000522 <gpio_pin_read_logic>:
+ 522:	00 97       	sbiw	r24, 0x00	; 0
+ 524:	f9 f0       	breq	.+62     	; 0x564 <gpio_pin_read_logic+0x42>
+ 526:	61 15       	cp	r22, r1
+ 528:	71 05       	cpc	r23, r1
+ 52a:	f1 f0       	breq	.+60     	; 0x568 <gpio_pin_read_logic+0x46>
+ 52c:	fc 01       	movw	r30, r24
+ 52e:	20 81       	ld	r18, Z
+ 530:	e2 2f       	mov	r30, r18
+ 532:	e7 70       	andi	r30, 0x07	; 7
+ 534:	f0 e0       	ldi	r31, 0x00	; 0
+ 536:	ee 0f       	add	r30, r30
+ 538:	ff 1f       	adc	r31, r31
+ 53a:	e0 58       	subi	r30, 0x80	; 128
+ 53c:	ff 4f       	sbci	r31, 0xFF	; 255
+ 53e:	01 90       	ld	r0, Z+
+ 540:	f0 81       	ld	r31, Z
+ 542:	e0 2d       	mov	r30, r0
+ 544:	80 81       	ld	r24, Z
+ 546:	26 95       	lsr	r18
+ 548:	26 95       	lsr	r18
+ 54a:	26 95       	lsr	r18
+ 54c:	27 70       	andi	r18, 0x07	; 7
+ 54e:	90 e0       	ldi	r25, 0x00	; 0
+ 550:	02 c0       	rjmp	.+4      	; 0x556 <gpio_pin_read_logic+0x34>
+ 552:	95 95       	asr	r25
+ 554:	87 95       	ror	r24
+ 556:	2a 95       	dec	r18
+ 558:	e2 f7       	brpl	.-8      	; 0x552 <gpio_pin_read_logic+0x30>
+ 55a:	81 70       	andi	r24, 0x01	; 1
+ 55c:	fb 01       	movw	r30, r22
+ 55e:	80 83       	st	Z, r24
+ 560:	81 e0       	ldi	r24, 0x01	; 1
+ 562:	08 95       	ret
+ 564:	80 e0       	ldi	r24, 0x00	; 0
+ 566:	08 95       	ret
+ 568:	80 e0       	ldi	r24, 0x00	; 0
+ 56a:	08 95       	ret
 
-000005ac <gpio_pin_read_logic>:
- 5ac:	00 97       	sbiw	r24, 0x00	; 0
- 5ae:	f9 f0       	breq	.+62     	; 0x5ee <gpio_pin_read_logic+0x42>
- 5b0:	61 15       	cp	r22, r1
- 5b2:	71 05       	cpc	r23, r1
- 5b4:	f1 f0       	breq	.+60     	; 0x5f2 <gpio_pin_read_logic+0x46>
- 5b6:	fc 01       	movw	r30, r24
- 5b8:	20 81       	ld	r18, Z
- 5ba:	e2 2f       	mov	r30, r18
- 5bc:	e7 70       	andi	r30, 0x07	; 7
- 5be:	f0 e0       	ldi	r31, 0x00	; 0
- 5c0:	ee 0f       	add	r30, r30
- 5c2:	ff 1f       	adc	r31, r31
- 5c4:	e2 58       	subi	r30, 0x82	; 130
- 5c6:	ff 4f       	sbci	r31, 0xFF	; 255
- 5c8:	01 90       	ld	r0, Z+
- 5ca:	f0 81       	ld	r31, Z
- 5cc:	e0 2d       	mov	r30, r0
- 5ce:	80 81       	ld	r24, Z
- 5d0:	26 95       	lsr	r18
- 5d2:	26 95       	lsr	r18
- 5d4:	26 95       	lsr	r18
- 5d6:	27 70       	andi	r18, 0x07	; 7
- 5d8:	90 e0       	ldi	r25, 0x00	; 0
- 5da:	02 c0       	rjmp	.+4      	; 0x5e0 <gpio_pin_read_logic+0x34>
- 5dc:	95 95       	asr	r25
- 5de:	87 95       	ror	r24
- 5e0:	2a 95       	dec	r18
- 5e2:	e2 f7       	brpl	.-8      	; 0x5dc <gpio_pin_read_logic+0x30>
- 5e4:	81 70       	andi	r24, 0x01	; 1
- 5e6:	fb 01       	movw	r30, r22
- 5e8:	80 83       	st	Z, r24
- 5ea:	81 e0       	ldi	r24, 0x01	; 1
- 5ec:	08 95       	ret
- 5ee:	80 e0       	ldi	r24, 0x00	; 0
- 5f0:	08 95       	ret
- 5f2:	80 e0       	ldi	r24, 0x00	; 0
- 5f4:	08 95       	ret
-
-000005f6 <gpio_pin_init>:
+0000056c <gpio_pin_init>:
  * 
  * @param _pin_config Pointer to pin configuration structure
  * @return Std_ReturnType E_OK if successful, E_NOT_OK if error
  */
 Std_ReturnType gpio_pin_init(const pin_config_t *_pin_config)
 {
- 5f6:	cf 93       	push	r28
- 5f8:	df 93       	push	r29
+ 56c:	cf 93       	push	r28
+ 56e:	df 93       	push	r29
     Std_ReturnType ret = E_OK;
     if ((NULL == _pin_config) || (_pin_config->pin > (PORT_PIN_MAX_NUMBER - 1)))
- 5fa:	00 97       	sbiw	r24, 0x00	; 0
- 5fc:	59 f0       	breq	.+22     	; 0x614 <gpio_pin_init+0x1e>
- 5fe:	ec 01       	movw	r28, r24
+ 570:	00 97       	sbiw	r24, 0x00	; 0
+ 572:	59 f0       	breq	.+22     	; 0x58a <gpio_pin_init+0x1e>
+ 574:	ec 01       	movw	r28, r24
     {
         ret = E_NOT_OK;
     }
     else
     {
         ret = gpio_pin_direction_init(_pin_config);
- 600:	0e 94 4c 02 	call	0x498	; 0x498 <gpio_pin_direction_init>
+ 576:	0e 94 07 02 	call	0x40e	; 0x40e <gpio_pin_direction_init>
         ret = gpio_pin_write_logic(_pin_config, _pin_config->logic);
- 604:	68 81       	ld	r22, Y
- 606:	67 fb       	bst	r22, 7
- 608:	66 27       	eor	r22, r22
- 60a:	60 f9       	bld	r22, 0
- 60c:	ce 01       	movw	r24, r28
- 60e:	0e 94 8d 02 	call	0x51a	; 0x51a <gpio_pin_write_logic>
- 612:	01 c0       	rjmp	.+2      	; 0x616 <gpio_pin_init+0x20>
+ 57a:	68 81       	ld	r22, Y
+ 57c:	67 fb       	bst	r22, 7
+ 57e:	66 27       	eor	r22, r22
+ 580:	60 f9       	bld	r22, 0
+ 582:	ce 01       	movw	r24, r28
+ 584:	0e 94 48 02 	call	0x490	; 0x490 <gpio_pin_write_logic>
+ 588:	01 c0       	rjmp	.+2      	; 0x58c <gpio_pin_init+0x20>
 Std_ReturnType gpio_pin_init(const pin_config_t *_pin_config)
 {
     Std_ReturnType ret = E_OK;
     if ((NULL == _pin_config) || (_pin_config->pin > (PORT_PIN_MAX_NUMBER - 1)))
     {
         ret = E_NOT_OK;
- 614:	80 e0       	ldi	r24, 0x00	; 0
+ 58a:	80 e0       	ldi	r24, 0x00	; 0
     {
         ret = gpio_pin_direction_init(_pin_config);
         ret = gpio_pin_write_logic(_pin_config, _pin_config->logic);
     }
     return ret;
 }
- 616:	df 91       	pop	r29
- 618:	cf 91       	pop	r28
- 61a:	08 95       	ret
+ 58c:	df 91       	pop	r29
+ 58e:	cf 91       	pop	r28
+ 590:	08 95       	ret
 
-0000061c <_exit>:
- 61c:	f8 94       	cli
+00000592 <_exit>:
+ 592:	f8 94       	cli
 
-0000061e <__stop_program>:
- 61e:	ff cf       	rjmp	.-2      	; 0x61e <__stop_program>
+00000594 <__stop_program>:
+ 594:	ff cf       	rjmp	.-2      	; 0x594 <__stop_program>

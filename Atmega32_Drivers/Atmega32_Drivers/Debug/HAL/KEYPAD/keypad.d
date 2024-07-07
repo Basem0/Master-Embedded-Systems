@@ -1,5 +1,6 @@
 HAL/KEYPAD/keypad.d HAL/KEYPAD/keypad.o: ../HAL/KEYPAD/keypad.c \
- ../HAL/KEYPAD/keypad.h ../HAL/KEYPAD/../../MCAL/GPIO/gpio.h \
+ ../HAL/KEYPAD/keypad.h ../HAL/KEYPAD/keypad_cfg.h \
+ ../HAL/KEYPAD/../../MCAL/GPIO/gpio.h \
  ../HAL/KEYPAD/../../MCAL/GPIO/../includes/atmega32_device_header.h \
  ../HAL/KEYPAD/../../MCAL/GPIO/../includes/Utils.h \
  ../HAL/KEYPAD/../../MCAL/GPIO/../includes/Platform_Types.h \
@@ -11,6 +12,8 @@ HAL/KEYPAD/keypad.d HAL/KEYPAD/keypad.o: ../HAL/KEYPAD/keypad.c \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h
 
 ../HAL/KEYPAD/keypad.h:
+
+../HAL/KEYPAD/keypad_cfg.h:
 
 ../HAL/KEYPAD/../../MCAL/GPIO/gpio.h:
 
