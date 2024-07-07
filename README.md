@@ -125,5 +125,33 @@ Also You Can Find My Summeries & Progress In Diploma Here
   </tr>
 </table>
 
+#### [Unit 7: System Architect]() (✖✖✖)
+<table>
+  <tr>
+    <td>
+      <ul>
+        <li>Stack& Queue & Linked List ✔</li>
+        <li>State Machine & FLowChart ✔</li>
+        <li>Embedded System Archicture ✔</li>
+      </ul>
+    </td>
+    <td style="vertical-align: middle; padding-left: 40px;">
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <p style="margin: 0;">You Can Find My All Summary for This Part In This Link.</p>
+        <a href="https://your-link-here.com" style="margin-top: 10px;">
+          <img src="https://github.com/Basem0/Master-Embedded-Systems/assets/126205898/7cf2b4fa-7f20-4f76-b7cb-8b295d00f06d" alt="Go to Another Link" style="
+            display: inline-block;
+            padding: 10px;
+            background-color: #007BFF;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+          ">
+        </a>
+      </div>
+    </td>
+  </tr>
+</table>
+
 
 #### [Drive Link](https://drive.google.com/drive/folders/1GWskSVN4Az89VHR4Vtoy4MFsKqjWxi4G)
