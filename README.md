@@ -69,7 +69,7 @@ Also You Can Find My Summeries & Progress In Diploma Here
   </tr>
 </table>
 
-#### [Unit 4: System Architect]() (✖✖✖)
+#### [Unit 4: System Architect]() (✔✔✔)
 <table>
   <tr>
     <td>
@@ -97,7 +97,24 @@ Also You Can Find My Summeries & Progress In Diploma Here
   </tr>
 </table>
 
-#### [Unit 6: System Architect]() (✖✖✖)
+#### [Unit 5: Term1 Project]() (✔✔✔)
+<table>
+  <tr>
+    <td>
+      <ul>
+        <li>Project 1 ✔</li>
+        <li>Project 2 ✔</li>
+      </ul>
+    </td>
+    <td style="vertical-align: middle; padding-left: 40px;">
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        
+      </div>
+    </td>
+  </tr>
+</table>
+
+#### [Unit 6: System Architect]() (✔✔✔)
 <table>
   <tr>
     <td>
