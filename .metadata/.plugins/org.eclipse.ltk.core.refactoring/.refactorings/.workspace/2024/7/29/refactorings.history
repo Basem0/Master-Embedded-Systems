@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Delete resource &apos;Stm32f103c8_Drivers/MCAL/LIBS/STM32F103C8&apos;" deleteContents="false" description="Delete resource &apos;Stm32f103c8_Drivers/MCAL/LIBS/STM32F103C8&apos;" element1="/Stm32f103c8_Drivers/MCAL/LIBS/STM32F103C8" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1721515047194"/>
-</session>
