@@ -1,0 +1,527 @@
+
+Assignment.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000002ba  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  0000032e  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000006  00800060  00800060  0000032e  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  0000032e  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000360  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000080  00000000  00000000  0000039c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   0000098e  00000000  00000000  0000041c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 000006a0  00000000  00000000  00000daa  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   0000053a  00000000  00000000  0000144a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  000001a0  00000000  00000000  00001984  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    000004c5  00000000  00000000  00001b24  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    000005b5  00000000  00000000  00001fe9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000060  00000000  00000000  0000259e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 e0 00 	jmp	0x1c0	; 0x1c0 <__vector_1>
+   8:	0c 94 09 01 	jmp	0x212	; 0x212 <__vector_2>
+   c:	0c 94 32 01 	jmp	0x264	; 0x264 <__vector_3>
+  10:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  14:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  18:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  24:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  28:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  2c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  38:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  3c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  40:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  44:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  48:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  4c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  50:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_clear_bss>:
+  60:	20 e0       	ldi	r18, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	01 c0       	rjmp	.+2      	; 0x6a <.do_clear_bss_start>
+
+00000068 <.do_clear_bss_loop>:
+  68:	1d 92       	st	X+, r1
+
+0000006a <.do_clear_bss_start>:
+  6a:	a6 36       	cpi	r26, 0x66	; 102
+  6c:	b2 07       	cpc	r27, r18
+  6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
+  70:	0e 94 5f 00 	call	0xbe	; 0xbe <main>
+  74:	0c 94 5b 01 	jmp	0x2b6	; 0x2b6 <_exit>
+
+00000078 <__bad_interrupt>:
+  78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000007c <Handler_EXT0>:
+    }
+}
+
+void Handler_EXT0()
+{
+	SET_BIT(PORTD,5);
+  7c:	95 9a       	sbi	0x12, 5	; 18
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  7e:	2f ef       	ldi	r18, 0xFF	; 255
+  80:	89 e6       	ldi	r24, 0x69	; 105
+  82:	98 e1       	ldi	r25, 0x18	; 24
+  84:	21 50       	subi	r18, 0x01	; 1
+  86:	80 40       	sbci	r24, 0x00	; 0
+  88:	90 40       	sbci	r25, 0x00	; 0
+  8a:	e1 f7       	brne	.-8      	; 0x84 <Handler_EXT0+0x8>
+  8c:	00 c0       	rjmp	.+0      	; 0x8e <Handler_EXT0+0x12>
+  8e:	00 00       	nop
+  90:	08 95       	ret
+
+00000092 <Handler_EXT1>:
+	_delay_ms(1000);
+}
+
+void Handler_EXT1()
+{
+	SET_BIT(PORTD,6);
+  92:	96 9a       	sbi	0x12, 6	; 18
+  94:	2f ef       	ldi	r18, 0xFF	; 255
+  96:	89 e6       	ldi	r24, 0x69	; 105
+  98:	98 e1       	ldi	r25, 0x18	; 24
+  9a:	21 50       	subi	r18, 0x01	; 1
+  9c:	80 40       	sbci	r24, 0x00	; 0
+  9e:	90 40       	sbci	r25, 0x00	; 0
+  a0:	e1 f7       	brne	.-8      	; 0x9a <Handler_EXT1+0x8>
+  a2:	00 c0       	rjmp	.+0      	; 0xa4 <Handler_EXT1+0x12>
+  a4:	00 00       	nop
+  a6:	08 95       	ret
+
+000000a8 <Handler_EXT2>:
+	_delay_ms(1000);	
+}
+
+void Handler_EXT2()
+{
+	SET_BIT(PORTD,7);
+  a8:	97 9a       	sbi	0x12, 7	; 18
+  aa:	2f ef       	ldi	r18, 0xFF	; 255
+  ac:	89 e6       	ldi	r24, 0x69	; 105
+  ae:	98 e1       	ldi	r25, 0x18	; 24
+  b0:	21 50       	subi	r18, 0x01	; 1
+  b2:	80 40       	sbci	r24, 0x00	; 0
+  b4:	90 40       	sbci	r25, 0x00	; 0
+  b6:	e1 f7       	brne	.-8      	; 0xb0 <Handler_EXT2+0x8>
+  b8:	00 c0       	rjmp	.+0      	; 0xba <Handler_EXT2+0x12>
+  ba:	00 00       	nop
+  bc:	08 95       	ret
+
+000000be <main>:
+void Handler_EXT1();
+void Handler_EXT2();
+
+int main(void)
+{
+	EXT_INT_enuEnable(EXT_INT_u8_INT0,EXT_INT_u8_LOGICAL_CHANGE_INT0);
+  be:	61 e0       	ldi	r22, 0x01	; 1
+  c0:	80 e0       	ldi	r24, 0x00	; 0
+  c2:	0e 94 82 00 	call	0x104	; 0x104 <EXT_INT_enuEnable>
+	EXT_INT_enuEnable(EXT_INT_u8_INT1,EXT_INT_u8_RISING_EDGE_INT1);
+  c6:	6c e0       	ldi	r22, 0x0C	; 12
+  c8:	81 e0       	ldi	r24, 0x01	; 1
+  ca:	0e 94 82 00 	call	0x104	; 0x104 <EXT_INT_enuEnable>
+	EXT_INT_enuEnable(EXT_INT_u8_INT2,EXT_INT_u8_FALLING_EDGE_INT2);
+  ce:	60 e0       	ldi	r22, 0x00	; 0
+  d0:	82 e0       	ldi	r24, 0x02	; 2
+  d2:	0e 94 82 00 	call	0x104	; 0x104 <EXT_INT_enuEnable>
+	
+	EXT_INT_enuRegisterCBF(EXT_INT_u8_INT0, Handler_EXT0);
+  d6:	6e e3       	ldi	r22, 0x3E	; 62
+  d8:	70 e0       	ldi	r23, 0x00	; 0
+  da:	80 e0       	ldi	r24, 0x00	; 0
+  dc:	0e 94 bd 00 	call	0x17a	; 0x17a <EXT_INT_enuRegisterCBF>
+	EXT_INT_enuRegisterCBF(EXT_INT_u8_INT1, Handler_EXT1);
+  e0:	69 e4       	ldi	r22, 0x49	; 73
+  e2:	70 e0       	ldi	r23, 0x00	; 0
+  e4:	81 e0       	ldi	r24, 0x01	; 1
+  e6:	0e 94 bd 00 	call	0x17a	; 0x17a <EXT_INT_enuRegisterCBF>
+	EXT_INT_enuRegisterCBF(EXT_INT_u8_INT2, Handler_EXT2);
+  ea:	64 e5       	ldi	r22, 0x54	; 84
+  ec:	70 e0       	ldi	r23, 0x00	; 0
+  ee:	82 e0       	ldi	r24, 0x02	; 2
+  f0:	0e 94 bd 00 	call	0x17a	; 0x17a <EXT_INT_enuRegisterCBF>
+	
+	SET_BIT(DDRD,5);
+  f4:	8d 9a       	sbi	0x11, 5	; 17
+	SET_BIT(DDRD,6);
+  f6:	8e 9a       	sbi	0x11, 6	; 17
+	SET_BIT(DDRD,7);
+  f8:	8f 9a       	sbi	0x11, 7	; 17
+	
+	sei();
+  fa:	78 94       	sei
+	
+    while(1)
+    {
+        CLR_BIT(PORTD, 5);
+  fc:	95 98       	cbi	0x12, 5	; 18
+	    CLR_BIT(PORTD, 6);
+  fe:	96 98       	cbi	0x12, 6	; 18
+		CLR_BIT(PORTD, 7);	
+ 100:	97 98       	cbi	0x12, 7	; 18
+ 102:	fc cf       	rjmp	.-8      	; 0xfc <main+0x3e>
+
+00000104 <EXT_INT_enuEnable>:
+	        }
+	 }
+
+
+	return Local_enuErrorStatus;
+}
+ 104:	83 30       	cpi	r24, 0x03	; 3
+ 106:	78 f5       	brcc	.+94     	; 0x166 <EXT_INT_enuEnable+0x62>
+ 108:	81 30       	cpi	r24, 0x01	; 1
+ 10a:	71 f0       	breq	.+28     	; 0x128 <EXT_INT_enuEnable+0x24>
+ 10c:	18 f0       	brcs	.+6      	; 0x114 <EXT_INT_enuEnable+0x10>
+ 10e:	82 30       	cpi	r24, 0x02	; 2
+ 110:	c9 f0       	breq	.+50     	; 0x144 <EXT_INT_enuEnable+0x40>
+ 112:	2b c0       	rjmp	.+86     	; 0x16a <EXT_INT_enuEnable+0x66>
+ 114:	64 30       	cpi	r22, 0x04	; 4
+ 116:	58 f5       	brcc	.+86     	; 0x16e <EXT_INT_enuEnable+0x6a>
+ 118:	85 b7       	in	r24, 0x35	; 53
+ 11a:	68 2b       	or	r22, r24
+ 11c:	65 bf       	out	0x35, r22	; 53
+ 11e:	8b b7       	in	r24, 0x3b	; 59
+ 120:	80 64       	ori	r24, 0x40	; 64
+ 122:	8b bf       	out	0x3b, r24	; 59
+ 124:	80 e0       	ldi	r24, 0x00	; 0
+ 126:	08 95       	ret
+ 128:	86 2f       	mov	r24, r22
+ 12a:	8b 7f       	andi	r24, 0xFB	; 251
+ 12c:	88 30       	cpi	r24, 0x08	; 8
+ 12e:	11 f0       	breq	.+4      	; 0x134 <EXT_INT_enuEnable+0x30>
+ 130:	81 11       	cpse	r24, r1
+ 132:	1f c0       	rjmp	.+62     	; 0x172 <EXT_INT_enuEnable+0x6e>
+ 134:	85 b7       	in	r24, 0x35	; 53
+ 136:	68 2b       	or	r22, r24
+ 138:	65 bf       	out	0x35, r22	; 53
+ 13a:	8b b7       	in	r24, 0x3b	; 59
+ 13c:	80 68       	ori	r24, 0x80	; 128
+ 13e:	8b bf       	out	0x3b, r24	; 59
+ 140:	80 e0       	ldi	r24, 0x00	; 0
+ 142:	08 95       	ret
+ 144:	86 2f       	mov	r24, r22
+ 146:	8f 7b       	andi	r24, 0xBF	; 191
+ 148:	b1 f4       	brne	.+44     	; 0x176 <EXT_INT_enuEnable+0x72>
+ 14a:	8b b7       	in	r24, 0x3b	; 59
+ 14c:	8f 7d       	andi	r24, 0xDF	; 223
+ 14e:	8b bf       	out	0x3b, r24	; 59
+ 150:	84 b7       	in	r24, 0x34	; 52
+ 152:	68 2b       	or	r22, r24
+ 154:	64 bf       	out	0x34, r22	; 52
+ 156:	8a b7       	in	r24, 0x3a	; 58
+ 158:	80 62       	ori	r24, 0x20	; 32
+ 15a:	8a bf       	out	0x3a, r24	; 58
+ 15c:	8b b7       	in	r24, 0x3b	; 59
+ 15e:	80 62       	ori	r24, 0x20	; 32
+ 160:	8b bf       	out	0x3b, r24	; 59
+ 162:	80 e0       	ldi	r24, 0x00	; 0
+ 164:	08 95       	ret
+ 166:	81 e0       	ldi	r24, 0x01	; 1
+ 168:	08 95       	ret
+ 16a:	80 e0       	ldi	r24, 0x00	; 0
+ 16c:	08 95       	ret
+ 16e:	81 e0       	ldi	r24, 0x01	; 1
+ 170:	08 95       	ret
+ 172:	81 e0       	ldi	r24, 0x01	; 1
+ 174:	08 95       	ret
+ 176:	81 e0       	ldi	r24, 0x01	; 1
+ 178:	08 95       	ret
+
+0000017a <EXT_INT_enuRegisterCBF>:
+ * */
+EXT_INT_tenuErrorStatus EXT_INT_enuRegisterCBF(u8 Copy_u8ExtPin , func_ptr Add_pfuncCBF)
+{
+	EXT_INT_tenuErrorStatus  Local_enuErrorStatus = EXT_INT_OK;
+	/* Check Arguments */
+	if(Copy_u8ExtPin>EXT_INT_u8_INT2 || Add_pfuncCBF == NULL )
+ 17a:	83 30       	cpi	r24, 0x03	; 3
+ 17c:	d8 f4       	brcc	.+54     	; 0x1b4 <EXT_INT_enuRegisterCBF+0x3a>
+ 17e:	61 15       	cp	r22, r1
+ 180:	71 05       	cpc	r23, r1
+ 182:	d1 f0       	breq	.+52     	; 0x1b8 <EXT_INT_enuRegisterCBF+0x3e>
+	{
+		Local_enuErrorStatus=EXT_INT_NOK;
+	}
+	else
+	{
+	      switch(Copy_u8ExtPin)
+ 184:	81 30       	cpi	r24, 0x01	; 1
+ 186:	51 f0       	breq	.+20     	; 0x19c <EXT_INT_enuRegisterCBF+0x22>
+ 188:	18 f0       	brcs	.+6      	; 0x190 <EXT_INT_enuRegisterCBF+0x16>
+ 18a:	82 30       	cpi	r24, 0x02	; 2
+ 18c:	69 f0       	breq	.+26     	; 0x1a8 <EXT_INT_enuRegisterCBF+0x2e>
+ 18e:	16 c0       	rjmp	.+44     	; 0x1bc <EXT_INT_enuRegisterCBF+0x42>
+		         {
+		              case EXT_INT_u8_INT0 :
+		            	  EXT_INT_strISR.EXT_INT_pfunINT0=Add_pfuncCBF;
+ 190:	70 93 61 00 	sts	0x0061, r23	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+ 194:	60 93 60 00 	sts	0x0060, r22	; 0x800060 <__DATA_REGION_ORIGIN__>
+ *                          Second Argument: Add_pfuncCBF
+ * Return: ErrorStatus>>>>>>   EXT_INT_OK , EXT_INT_NOK
+ * */
+EXT_INT_tenuErrorStatus EXT_INT_enuRegisterCBF(u8 Copy_u8ExtPin , func_ptr Add_pfuncCBF)
+{
+	EXT_INT_tenuErrorStatus  Local_enuErrorStatus = EXT_INT_OK;
+ 198:	80 e0       	ldi	r24, 0x00	; 0
+	{
+	      switch(Copy_u8ExtPin)
+		         {
+		              case EXT_INT_u8_INT0 :
+		            	  EXT_INT_strISR.EXT_INT_pfunINT0=Add_pfuncCBF;
+		                            break;
+ 19a:	08 95       	ret
+
+		              case EXT_INT_u8_INT1 :
+		            	  EXT_INT_strISR.EXT_INT_pfunINT1=Add_pfuncCBF;
+ 19c:	70 93 63 00 	sts	0x0063, r23	; 0x800063 <__DATA_REGION_ORIGIN__+0x3>
+ 1a0:	60 93 62 00 	sts	0x0062, r22	; 0x800062 <__DATA_REGION_ORIGIN__+0x2>
+ *                          Second Argument: Add_pfuncCBF
+ * Return: ErrorStatus>>>>>>   EXT_INT_OK , EXT_INT_NOK
+ * */
+EXT_INT_tenuErrorStatus EXT_INT_enuRegisterCBF(u8 Copy_u8ExtPin , func_ptr Add_pfuncCBF)
+{
+	EXT_INT_tenuErrorStatus  Local_enuErrorStatus = EXT_INT_OK;
+ 1a4:	80 e0       	ldi	r24, 0x00	; 0
+		                            break;
+
+		              case EXT_INT_u8_INT1 :
+		            	  EXT_INT_strISR.EXT_INT_pfunINT1=Add_pfuncCBF;
+
+		                            break;
+ 1a6:	08 95       	ret
+
+		              case EXT_INT_u8_INT2 :
+		            	  EXT_INT_strISR.EXT_INT_pfunINT2=Add_pfuncCBF;
+ 1a8:	70 93 65 00 	sts	0x0065, r23	; 0x800065 <__DATA_REGION_ORIGIN__+0x5>
+ 1ac:	60 93 64 00 	sts	0x0064, r22	; 0x800064 <__DATA_REGION_ORIGIN__+0x4>
+ *                          Second Argument: Add_pfuncCBF
+ * Return: ErrorStatus>>>>>>   EXT_INT_OK , EXT_INT_NOK
+ * */
+EXT_INT_tenuErrorStatus EXT_INT_enuRegisterCBF(u8 Copy_u8ExtPin , func_ptr Add_pfuncCBF)
+{
+	EXT_INT_tenuErrorStatus  Local_enuErrorStatus = EXT_INT_OK;
+ 1b0:	80 e0       	ldi	r24, 0x00	; 0
+		                            break;
+
+		              case EXT_INT_u8_INT2 :
+		            	  EXT_INT_strISR.EXT_INT_pfunINT2=Add_pfuncCBF;
+
+		                        break;
+ 1b2:	08 95       	ret
+{
+	EXT_INT_tenuErrorStatus  Local_enuErrorStatus = EXT_INT_OK;
+	/* Check Arguments */
+	if(Copy_u8ExtPin>EXT_INT_u8_INT2 || Add_pfuncCBF == NULL )
+	{
+		Local_enuErrorStatus=EXT_INT_NOK;
+ 1b4:	81 e0       	ldi	r24, 0x01	; 1
+ 1b6:	08 95       	ret
+ 1b8:	81 e0       	ldi	r24, 0x01	; 1
+ 1ba:	08 95       	ret
+ *                          Second Argument: Add_pfuncCBF
+ * Return: ErrorStatus>>>>>>   EXT_INT_OK , EXT_INT_NOK
+ * */
+EXT_INT_tenuErrorStatus EXT_INT_enuRegisterCBF(u8 Copy_u8ExtPin , func_ptr Add_pfuncCBF)
+{
+	EXT_INT_tenuErrorStatus  Local_enuErrorStatus = EXT_INT_OK;
+ 1bc:	80 e0       	ldi	r24, 0x00	; 0
+
+		                        break;
+		        }
+	}
+	return Local_enuErrorStatus;
+}
+ 1be:	08 95       	ret
+
+000001c0 <__vector_1>:
+
+
+ 
+ void __vector_1(void)     __attribute__((signal,used));
+ void __vector_1(void)
+ {
+ 1c0:	1f 92       	push	r1
+ 1c2:	0f 92       	push	r0
+ 1c4:	0f b6       	in	r0, 0x3f	; 63
+ 1c6:	0f 92       	push	r0
+ 1c8:	11 24       	eor	r1, r1
+ 1ca:	2f 93       	push	r18
+ 1cc:	3f 93       	push	r19
+ 1ce:	4f 93       	push	r20
+ 1d0:	5f 93       	push	r21
+ 1d2:	6f 93       	push	r22
+ 1d4:	7f 93       	push	r23
+ 1d6:	8f 93       	push	r24
+ 1d8:	9f 93       	push	r25
+ 1da:	af 93       	push	r26
+ 1dc:	bf 93       	push	r27
+ 1de:	ef 93       	push	r30
+ 1e0:	ff 93       	push	r31
+ 	if( EXT_INT_strISR.EXT_INT_pfunINT0 !=NULL)
+ 1e2:	e0 91 60 00 	lds	r30, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 1e6:	f0 91 61 00 	lds	r31, 0x0061	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+ 1ea:	30 97       	sbiw	r30, 0x00	; 0
+ 1ec:	09 f0       	breq	.+2      	; 0x1f0 <__vector_1+0x30>
+ 		     EXT_INT_strISR.EXT_INT_pfunINT0();
+ 1ee:	09 95       	icall
+ }
+ 1f0:	ff 91       	pop	r31
+ 1f2:	ef 91       	pop	r30
+ 1f4:	bf 91       	pop	r27
+ 1f6:	af 91       	pop	r26
+ 1f8:	9f 91       	pop	r25
+ 1fa:	8f 91       	pop	r24
+ 1fc:	7f 91       	pop	r23
+ 1fe:	6f 91       	pop	r22
+ 200:	5f 91       	pop	r21
+ 202:	4f 91       	pop	r20
+ 204:	3f 91       	pop	r19
+ 206:	2f 91       	pop	r18
+ 208:	0f 90       	pop	r0
+ 20a:	0f be       	out	0x3f, r0	; 63
+ 20c:	0f 90       	pop	r0
+ 20e:	1f 90       	pop	r1
+ 210:	18 95       	reti
+
+00000212 <__vector_2>:
+
+// 	ISR(INT1_VECT)
+ void __vector_2(void)     __attribute__((signal,used));
+ void __vector_2(void)
+ {
+ 212:	1f 92       	push	r1
+ 214:	0f 92       	push	r0
+ 216:	0f b6       	in	r0, 0x3f	; 63
+ 218:	0f 92       	push	r0
+ 21a:	11 24       	eor	r1, r1
+ 21c:	2f 93       	push	r18
+ 21e:	3f 93       	push	r19
+ 220:	4f 93       	push	r20
+ 222:	5f 93       	push	r21
+ 224:	6f 93       	push	r22
+ 226:	7f 93       	push	r23
+ 228:	8f 93       	push	r24
+ 22a:	9f 93       	push	r25
+ 22c:	af 93       	push	r26
+ 22e:	bf 93       	push	r27
+ 230:	ef 93       	push	r30
+ 232:	ff 93       	push	r31
+ 	if( EXT_INT_strISR.EXT_INT_pfunINT1 !=NULL)
+ 234:	e0 91 62 00 	lds	r30, 0x0062	; 0x800062 <__DATA_REGION_ORIGIN__+0x2>
+ 238:	f0 91 63 00 	lds	r31, 0x0063	; 0x800063 <__DATA_REGION_ORIGIN__+0x3>
+ 23c:	30 97       	sbiw	r30, 0x00	; 0
+ 23e:	09 f0       	breq	.+2      	; 0x242 <__vector_2+0x30>
+     EXT_INT_strISR.EXT_INT_pfunINT1();
+ 240:	09 95       	icall
+ }
+ 242:	ff 91       	pop	r31
+ 244:	ef 91       	pop	r30
+ 246:	bf 91       	pop	r27
+ 248:	af 91       	pop	r26
+ 24a:	9f 91       	pop	r25
+ 24c:	8f 91       	pop	r24
+ 24e:	7f 91       	pop	r23
+ 250:	6f 91       	pop	r22
+ 252:	5f 91       	pop	r21
+ 254:	4f 91       	pop	r20
+ 256:	3f 91       	pop	r19
+ 258:	2f 91       	pop	r18
+ 25a:	0f 90       	pop	r0
+ 25c:	0f be       	out	0x3f, r0	; 63
+ 25e:	0f 90       	pop	r0
+ 260:	1f 90       	pop	r1
+ 262:	18 95       	reti
+
+00000264 <__vector_3>:
+//	ISR(INT2_VECT)
+void __vector_3(void)     __attribute__((signal,used));
+void __vector_3(void)
+{
+ 264:	1f 92       	push	r1
+ 266:	0f 92       	push	r0
+ 268:	0f b6       	in	r0, 0x3f	; 63
+ 26a:	0f 92       	push	r0
+ 26c:	11 24       	eor	r1, r1
+ 26e:	2f 93       	push	r18
+ 270:	3f 93       	push	r19
+ 272:	4f 93       	push	r20
+ 274:	5f 93       	push	r21
+ 276:	6f 93       	push	r22
+ 278:	7f 93       	push	r23
+ 27a:	8f 93       	push	r24
+ 27c:	9f 93       	push	r25
+ 27e:	af 93       	push	r26
+ 280:	bf 93       	push	r27
+ 282:	ef 93       	push	r30
+ 284:	ff 93       	push	r31
+	if( EXT_INT_strISR.EXT_INT_pfunINT2 !=NULL)
+ 286:	e0 91 64 00 	lds	r30, 0x0064	; 0x800064 <__DATA_REGION_ORIGIN__+0x4>
+ 28a:	f0 91 65 00 	lds	r31, 0x0065	; 0x800065 <__DATA_REGION_ORIGIN__+0x5>
+ 28e:	30 97       	sbiw	r30, 0x00	; 0
+ 290:	09 f0       	breq	.+2      	; 0x294 <__vector_3+0x30>
+		     EXT_INT_strISR.EXT_INT_pfunINT2();
+ 292:	09 95       	icall
+}
+ 294:	ff 91       	pop	r31
+ 296:	ef 91       	pop	r30
+ 298:	bf 91       	pop	r27
+ 29a:	af 91       	pop	r26
+ 29c:	9f 91       	pop	r25
+ 29e:	8f 91       	pop	r24
+ 2a0:	7f 91       	pop	r23
+ 2a2:	6f 91       	pop	r22
+ 2a4:	5f 91       	pop	r21
+ 2a6:	4f 91       	pop	r20
+ 2a8:	3f 91       	pop	r19
+ 2aa:	2f 91       	pop	r18
+ 2ac:	0f 90       	pop	r0
+ 2ae:	0f be       	out	0x3f, r0	; 63
+ 2b0:	0f 90       	pop	r0
+ 2b2:	1f 90       	pop	r1
+ 2b4:	18 95       	reti
+
+000002b6 <_exit>:
+ 2b6:	f8 94       	cli
+
+000002b8 <__stop_program>:
+ 2b8:	ff cf       	rjmp	.-2      	; 0x2b8 <__stop_program>
