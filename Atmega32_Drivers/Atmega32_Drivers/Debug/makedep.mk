@@ -2,11 +2,13 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-HAL\KEYPAD\keypad.c
-
-HAL\LCD\lcd.c
+HAL\LCD\LCD.c
 
 main.c
 
-MCAL\GPIO\gpio.c
+MCAL\GPIO\GPIO.c
+
+MCAL\SPI\SPI.c
+
+MCAL\USART\USART.c
 

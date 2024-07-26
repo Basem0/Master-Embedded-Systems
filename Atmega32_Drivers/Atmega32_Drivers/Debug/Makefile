@@ -38,15 +38,18 @@ SUBDIRS :=  \
 ../HAL/KEYPAD \
 ../MCAL \
 ../MCAL/GPIO \
-../MCAL/includes
+../MCAL/includes \
+../MCAL/SPI \
+../MCAL/USART
 
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
-../HAL/KEYPAD/keypad.c \
-../HAL/LCD/lcd.c \
+../HAL/LCD/LCD.c \
 ../main.c \
-../MCAL/GPIO/gpio.c
+../MCAL/GPIO/GPIO.c \
+../MCAL/SPI/SPI.c \
+../MCAL/USART/USART.c
 
 
 PREPROCESSING_SRCS += 
@@ -56,28 +59,32 @@ ASM_SRCS +=
 
 
 OBJS +=  \
-HAL/KEYPAD/keypad.o \
-HAL/LCD/lcd.o \
+HAL/LCD/LCD.o \
 main.o \
-MCAL/GPIO/gpio.o
+MCAL/GPIO/GPIO.o \
+MCAL/SPI/SPI.o \
+MCAL/USART/USART.o
 
 OBJS_AS_ARGS +=  \
-HAL/KEYPAD/keypad.o \
-HAL/LCD/lcd.o \
+HAL/LCD/LCD.o \
 main.o \
-MCAL/GPIO/gpio.o
+MCAL/GPIO/GPIO.o \
+MCAL/SPI/SPI.o \
+MCAL/USART/USART.o
 
 C_DEPS +=  \
-HAL/KEYPAD/keypad.d \
-HAL/LCD/lcd.d \
+HAL/LCD/LCD.d \
 main.d \
-MCAL/GPIO/gpio.d
+MCAL/GPIO/GPIO.d \
+MCAL/SPI/SPI.d \
+MCAL/USART/USART.d
 
 C_DEPS_AS_ARGS +=  \
-HAL/KEYPAD/keypad.d \
-HAL/LCD/lcd.d \
+HAL/LCD/LCD.d \
 main.d \
-MCAL/GPIO/gpio.d
+MCAL/GPIO/GPIO.d \
+MCAL/SPI/SPI.d \
+MCAL/USART/USART.d
 
 OUTPUT_FILE_PATH +=Atmega32_Drivers.elf
 
@@ -93,14 +100,7 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
-HAL/KEYPAD/keypad.o: ../HAL/KEYPAD/keypad.c
-	@echo Building file: $<
-	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
-	@echo Finished building: $<
-	
-
-HAL/LCD/lcd.o: ../HAL/LCD/lcd.c
+HAL/LCD/LCD.o: ../HAL/LCD/LCD.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
@@ -114,7 +114,21 @@ HAL/LCD/lcd.o: ../HAL/LCD/lcd.c
 	@echo Finished building: $<
 	
 
-MCAL/GPIO/gpio.o: ../MCAL/GPIO/gpio.c
+MCAL/GPIO/GPIO.o: ../MCAL/GPIO/GPIO.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+MCAL/SPI/SPI.o: ../MCAL/SPI/SPI.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+MCAL/USART/USART.o: ../MCAL/USART/USART.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

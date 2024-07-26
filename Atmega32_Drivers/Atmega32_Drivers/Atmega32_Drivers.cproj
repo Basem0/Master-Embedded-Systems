@@ -133,28 +133,22 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HAL\KEYPAD\keypad.c">
+    <Compile Include="HAL\LCD\LCD.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="HAL\KEYPAD\keypad.h">
+    <Compile Include="HAL\LCD\LCD.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="HAL\KEYPAD\keypad_cfg.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="HAL\LCD\lcd.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="HAL\LCD\lcd.h">
+    <Compile Include="HAL\LCD\LCD_CFG.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="MCAL\GPIO\gpio.c">
+    <Compile Include="MCAL\GPIO\GPIO.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="MCAL\GPIO\gpio.h">
+    <Compile Include="MCAL\GPIO\GPIO.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="MCAL\includes\atmega32_device_header.h">
@@ -166,6 +160,18 @@
     <Compile Include="MCAL\includes\Utils.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="MCAL\SPI\SPI.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MCAL\SPI\SPI.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MCAL\USART\USART.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MCAL\USART\USART.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HAL" />
@@ -174,6 +180,8 @@
     <Folder Include="MCAL" />
     <Folder Include="MCAL\GPIO" />
     <Folder Include="MCAL\includes" />
+    <Folder Include="MCAL\SPI" />
+    <Folder Include="MCAL\USART" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

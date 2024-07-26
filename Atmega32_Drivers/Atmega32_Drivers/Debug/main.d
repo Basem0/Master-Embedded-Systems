@@ -1,4 +1,4 @@
-main.d main.o: .././main.c .././MCAL/GPIO/gpio.h \
+main.d main.o: .././main.c .././MCAL/GPIO/GPIO.h \
  .././MCAL/GPIO/../includes/atmega32_device_header.h \
  .././MCAL/GPIO/../includes/Utils.h \
  .././MCAL/GPIO/../includes/Platform_Types.h \
@@ -8,11 +8,12 @@ main.d main.o: .././main.c .././MCAL/GPIO/gpio.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdint.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay_basic.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h \
- .././HAL/LCD/lcd.h .././HAL/LCD/../../MCAL/GPIO/gpio.h \
- .././HAL/KEYPAD/keypad.h .././HAL/KEYPAD/keypad_cfg.h \
- .././HAL/KEYPAD/../../MCAL/GPIO/gpio.h
+ .././HAL/LCD/LCD.h .././HAL/LCD/../../MCAL/GPIO/GPIO.h \
+ .././MCAL/USART/USART.h \
+ .././MCAL/USART/../includes/atmega32_device_header.h \
+ .././MCAL/USART/../GPIO/GPIO.h
 
-.././MCAL/GPIO/gpio.h:
+.././MCAL/GPIO/GPIO.h:
 
 .././MCAL/GPIO/../includes/atmega32_device_header.h:
 
@@ -32,12 +33,12 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h:
 
-.././HAL/LCD/lcd.h:
+.././HAL/LCD/LCD.h:
 
-.././HAL/LCD/../../MCAL/GPIO/gpio.h:
+.././HAL/LCD/../../MCAL/GPIO/GPIO.h:
 
-.././HAL/KEYPAD/keypad.h:
+.././MCAL/USART/USART.h:
 
-.././HAL/KEYPAD/keypad_cfg.h:
+.././MCAL/USART/../includes/atmega32_device_header.h:
 
-.././HAL/KEYPAD/../../MCAL/GPIO/gpio.h:
+.././MCAL/USART/../GPIO/GPIO.h:

@@ -1,0 +1,1 @@
+### There is Not Quiz Or Assignment In This Lec

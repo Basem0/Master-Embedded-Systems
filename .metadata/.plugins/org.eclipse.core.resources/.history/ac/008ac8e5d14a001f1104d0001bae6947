@@ -1,0 +1,175 @@
+/*
+ * SPI.c
+ *
+ *  Created on: Jul 25, 2024
+ *      Author: Ahmed Basem
+ */
+
+/* ================================================================ */
+/* =========================== Includes =========================== */
+/* ================================================================ */
+#include "SPI.h"
+
+/* ================================================================ */
+/* ===================== Generic Variables ======================== */
+/* ================================================================ */
+SPI_Config_t *G_SPI_Config[2] = {NULL, NULL};
+
+/* ================================================================ */
+/* ======================= Generic Macros ========================= */
+/* ================================================================ */
+
+#define SPI1_INDEX 		0
+#define SPI2_INDEX 		1
+
+#define SPI_SR_TXE		(uint16)(1 << 1)
+#define SPI_SR_RXNE		(uint16)(1 << 0)
+
+/* ================================================================ */
+/* ======================== Public APIs =========================== */
+/* ================================================================ */
+
+/* ================================================================
+ * @Fn 				- MCAL_SPI_Init
+ * @brief 			- Initializes SPIx according to the specified parameters in SPI_Config_t
+ * @param [in] 		- SPIx : where x can be (1..2 depending on device used) to select SPI peripheral
+ * @param [in] 		- Config : a pointer to SPI_Config_t structure that contains the configuration information for the specified SPI Module
+ * @retval 			- None
+ * Note 			- Supported for SPI FULL DUPLEX Master/Slave only & NSS Hardware/Software
+ * 					- You have to configure RCC to select clock for the selected SPI Module
+ */
+void MCAL_SPI_Init(SPI_Typedef_t *SPIx, SPI_Config_t *Config)
+{
+	/* Safety for register, Using this technique for protect the peripheral form working before the full configurations */
+	uint16_t tempReg_CR1 = 0;
+	uint16_t tempReg_CR2 = 0;
+
+	if(SPIx == SPI1)
+	{
+		/* If SPI1 Put all configurations in the global config */
+		G_SPI_Config[SPI1_INDEX] = Config;
+
+		/* 1. Open the SPI1 RCC Clock */
+		RCC_SPI1_CLK_EN();
+	}
+	else if(SPIx == SPI2)
+	{
+		/* If SPI2 Put all configurations in the global config */
+		G_SPI_Config[SPI2_INDEX] = Config;
+
+		/* 1. Open the SPI1 RCC Clock */
+		RCC_SPI2_CLK_EN();
+	}
+
+	/* 2. Enable the SPI */
+	tempReg_CR1 |= (uint16_t)(1<<6); 	/* Bit 6 SPE: SPI enable */
+
+	/* 3. Set Master or Slave */
+	tempReg_CR1 |= Config->SPI_Mode;
+
+	/* 4. Set Communication Mode */
+	tempReg_CR1 |= Config->Communication_Mode;
+
+	/* 5. Set Frame format */
+	tempReg_CR1 |= Config->Frame_Format;
+
+	/* 6. Set Data size */
+	tempReg_CR1 |= Config->Frame_Size;
+
+	/* 7. Set Clock Polarity */
+	tempReg_CR1 |= Config->CLK_Polarity;
+
+	/* 8. Set Clock Phase */
+	tempReg_CR1 |= Config->CLK_Phase;
+
+	/* 9. Set Slave Select Management */
+	if(Config->NSS == NSS_HW_MASTER_SS_OUTPUT_ENABLED)
+	{
+		tempReg_CR2 |= Config->NSS;
+	}
+	else if(Config->NSS == NSS_HW_MASTER_SS_OUTPUT_DISABLED)
+	{
+		tempReg_CR2 &= Config->NSS;
+	}
+	else
+	{
+		tempReg_CR1 |= Config->NSS;
+	}
+
+	/* 10. Set BoudRate Pre-scaler */
+	tempReg_CR1 |= Config->BaudRate_Prescaler;
+
+	/* 11. Set Interrupt Type */
+	if(Config->IRQ_Enable != IRQ_ENABLE_NONE)
+	{
+		tempReg_CR2 |= Config->IRQ_Enable;
+
+		/* 12. Open the global Interrupt for each peripheral */
+		if (SPIx == SPI1)
+		{
+			NVIC_IRQ35_SPI1_EN();
+		}
+		else if(SPIx == SPI2)
+		{
+			NVIC_IRQ36_SPI2_EN();
+		}
+	}
+
+	/*13. Config your register using the temp register used to protect the configurations */
+	SPIx->CR1 = tempReg_CR1;
+	SPIx->CR2 = tempReg_CR2;
+
+}
+
+/* ================================================================
+ * @Fn 				- MCAL_SPI_DeInit
+ * @brief 			- Resets Selected SPI Module
+ * @param [in] 		- SPIx : where x can be (1..2 depending on device used) to select SPI peripheral
+ * @retval 			- None
+ * Note 			- Reset The Module By RCC & Disable NVIC
+ */
+
+/* ================================================================
+ * @Fn 				- MCAL_SPI_GPIO_Set_Pins
+ * @brief 			- Initializes GPIO Pins to be connected with the selected SPI
+ * @param [in] 		- SPIx : where x can be (1..2 depending on device used) to select SPI peripheral
+ * @retval 			- None
+ * Note 			- Must open clock for AFIO & GPIO After GPIO Initialization
+ * 					- Supported for SPI FULL DUPLEX Master/Slave only & NSS Hardware/Software
+ */
+
+/* ================================================================
+ * @Fn 				- MCAL_SPI_Send_Data
+ * @brief 			- Send Buffer With SPI
+ * @param [in] 		- SPIx : where x can be (1..2 depending on device used) to select SPI peripheral
+ * @param [in] 		- pTxBuffer : Pointer to buffer Which holds the Tx data
+ * @param [in] 		- Polling_En : Enable Polling or Disable it
+ * @retval 			- None
+ * Note 			- None
+ *
+ */
+
+/* ================================================================
+ * @Fn 				- MCAL_SPI_Recieve_Data
+ * @brief 			- Receive Buffer With SPI
+ * @param [in] 		- SPIx : where x can be (1..2 depending on device used) to select SPI peripheral
+ * @param [in] 		- pRxBuffer : Pointer to buffer which holds Rx data
+ * @param [in] 		- Polling_En : Enable Polling or Disable it
+ * @retval 			- None
+ * Note 			- None
+ */
+
+/* ================================================================
+ * @Fn 				- MCAL_SPI_TX_RX
+ * @brief 			- Transmit and Receive Data
+ * @param [in] 		- SPIx : where x can be (1..2 depending on device used) to select SPI peripheral
+ * @param [in] 		- pTxBuffer : Pointer to buffer which holds Transmit and Received data
+ * @param [in] 		- Polling_En : Enable Polling or Disable it
+ * @retval 			- None
+ * Note 			- None
+ */
+
+/* ================================================================ */
+/* ================= IRQ Function Definitions ===================== */
+/* ================================================================ */
+

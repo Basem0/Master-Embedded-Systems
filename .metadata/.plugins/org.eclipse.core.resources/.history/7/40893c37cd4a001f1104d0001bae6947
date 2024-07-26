@@ -1,0 +1,72 @@
+/*
+ * SPI.h
+ *
+ *  Created on: Jul 25, 2024
+ *      Author: Ahmed Basem
+ */
+
+#ifndef SPI_SPI_H_
+#define SPI_SPI_H_
+
+/* ================================================================ */
+/* =========================== Includes =========================== */
+/* ================================================================ */
+#include "STM32F103C8.h"
+#include "GPIO.h"
+
+/* ================================================================ */
+/* ============= User type definitions (structures) =============== */
+/* ================================================================ */
+struct S_IRQ_SRC
+{
+	uint8_t		TXE:1;						// TX Buffer Empty Interrupt
+	uint8_t		RXNE:1;						// RX Buffer Not Empty Interrupt
+	uint8_t		ERRI:1;						// Error Interrupt
+	uint8_t		Reserved:5;
+};
+
+typedef struct
+{
+	/* uint16 --> Because the data in register not more than 16-bit the remaining bits are reserved  */
+
+	uint16 	SPI_Mode;					// specifies SPI MODE Master/Slave
+										// This parameter must be set based on @ref SPI_MODE_DEFINE
+
+	uint16	Communication_Mode;			// specifies SPI Communication mode
+										// This parameter must be set based on @ref COMMUNICATION_MODE_DEFINE
+
+	uint16	Frame_Format;				// specifies Data MSB transmit first or LSB transmit first
+										// This parameter must be set based on @ref FRAME_FORMAT_DEFINE
+
+	uint16	Frame_Size;					// specifies Data frame size 8-bit or 16_bit
+										// This parameter must be set based on @ref FRABaudRate_PrescalerME_SIZE_DEFINE
+
+	uint16	CLK_Polarity;				// specifies SPI clock Polarity idle on low or idle on high
+										// This parameter must be set based on @ref CLK_POLARITY_DEFINE
+
+	uint16	CLK_Phase;					// specifies SPI clock Phase,first clock capture or second clock capture
+										// This parameter must be set based on @ref CLK_PHASE_DEFINE
+
+	uint16	NSS;						// specifies slave select management by hardware or by software
+										// This parameter must be set based on @ref NSS_DEFINE
+
+	uint16	BaudRate_Prescaler;		    // specifies SPI clock BaudRate Prescaler
+										// This parameter must be set based on @ref BAUDERATE_PRESCALER_DEFINE
+
+	uint16	IRQ_Enable;					// specifies SPI Interrupt Requests
+										// This parameter must be set based on @ref IRQ_ENABLE_DEFINE
+
+	void (* P_IRQ_CallBack)(struct S_IRQ_SRC IRQ_src);	//set the C Function which will be called once IRQ Happens
+}SPI_Config_t;
+
+/* ================================================================ */
+/* =============== Macros Configuration References ================ */
+/* ================================================================ */
+// @ref SPI_MODE_DEFINE
+#define SPI_MODE_MASTER	 (uint16)(1 << 2) /* CR1.Bit 2 MSTR: Master selection -> 	1: Master configuration */
+#define SPI_MODE_SLAVE   (uint16)(0)
+/* ================================================================ */
+/* =========== APIs Supported by "MCAL SPI DRIVER" ================ */
+/* ================================================================ */
+
+#endif /* SPI_SPI_H_ */
