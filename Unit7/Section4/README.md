@@ -1,3 +1,4 @@
 # Atmega32 Driver
 ## AMIT Kit Show Learn-in-Depth
-[![AMIT Kit Show Learn-in-Depth](https://drive.google.com/file/d/1g2Omy5vNBilHJYGCA_eoCJuNebi7uJNk/view?usp=sharing)](https://drive.google.com/file/d/1g2Omy5vNBilHJYGCA_eoCJuNebi7uJNk/view?usp=sharing)
+
+![Screenshot 2024-07-27 014218](https://github.com/user-attachments/assets/bad408c2-f1ae-41f6-a0e0-8fb14ce2af71)
