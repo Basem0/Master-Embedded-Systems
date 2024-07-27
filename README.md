@@ -97,35 +97,9 @@ Also You Can Find My Summeries & Progress In Diploma Here
   </tr>
 </table>
 
-#### [Unit 5: Term1 Project]() (✔✔✔)
-<table>
-  <tr>
-    <td>
-      <ul>
-        <li>Project 1 ✔</li>
-        <li>Project 2 ✔</li>
-      </ul>
-    </td>
-    <td style="vertical-align: middle; padding-left: 40px;">
-      <div style="display: flex; flex-direction: column; align-items: center;">
-        <p style="margin: 0;">You Can Find My All Summary for This Part In This Link.</p>
-        <a href="https://your-link-here.com" style="margin-top: 10px;">
-          <video controls style="
-              display: inline-block;
-              padding: 10px;
-              background-color: #007BFF;
-              border-radius: 12px;
-              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-              text-align: center;
-          ">
-            <source src="https://github.com/Basem0/Master-Embedded-Systems/blob/main/Unit5%20(Project)/1-HighPressure_Detection/Running.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </a>
-      </div>
-    </td>
-  </tr>
-</table>
+<hr>
+<hr>
+<hr>
 
 #### [Unit 6: System Architect]() (✔✔✔)
 <table>
